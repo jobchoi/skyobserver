@@ -6,7 +6,26 @@ public class SiginDTO {
     private String pwd;
     private String name;
     private String email;
+    private String filename;
 
+    @Override
+    public String toString() {
+        return "SiginDTO{" +
+                "id='" + id + '\'' +
+                ", pwd='" + pwd + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", filename='" + filename + '\'' +
+                '}';
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
 
     public SiginDTO() {
 
@@ -50,13 +69,4 @@ public class SiginDTO {
     }
 
 
-    @Override
-    public String toString() {
-        return "SiginDTO{" +
-                "id='" + id + '\'' +
-                ", pwd='" + pwd + '\'' +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                '}';
-    }
 }

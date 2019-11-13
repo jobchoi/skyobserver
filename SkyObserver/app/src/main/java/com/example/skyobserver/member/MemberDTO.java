@@ -4,6 +4,25 @@ public class MemberDTO {
     private String email;
     private String name;
     private String pwd;
+    private String filename;
+
+    @Override
+    public String toString() {
+        return "MemberDTO{" +
+                "email='" + email + '\'' +
+                ", name='" + name + '\'' +
+                ", pwd='" + pwd + '\'' +
+                ", filename='" + filename + '\'' +
+                '}';
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
 
     public String getEmail() {
         return email;
@@ -29,12 +48,4 @@ public class MemberDTO {
         this.pwd = pwd;
     }
 
-    @Override
-    public String toString() {
-        return "MemberDTO{" +
-                "email='" + email + '\'' +
-                ", name='" + name + '\'' +
-                ", pwd='" + pwd + '\'' +
-                '}';
-    }
 }

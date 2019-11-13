@@ -1,7 +1,6 @@
 package com.example.skyobserver.member;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -10,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -52,8 +52,9 @@ public class Login extends AppCompatActivity {
     String resPhoneStr;
     EditText email;
     EditText pwd;
-    public static SiginDTO sDto = new SiginDTO();
+    public static SiginDTO sDto;
 
+    ImageView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +109,7 @@ public class Login extends AppCompatActivity {
                     Log.i("sendData-url", url);
                     new SendSignDataTask(Login.this).execute();
                     Toast.makeText(Login.this, "전송버튼 클릭", Toast.LENGTH_SHORT).show();
+
                 } else {
                     Toast.makeText(Login.this, "빠진항목을 채워주세요.", Toast.LENGTH_SHORT).show();
                 }
@@ -130,6 +132,8 @@ public class Login extends AppCompatActivity {
                 }*/
             }
         });
+
+
     }
 
     @Override
@@ -218,15 +222,13 @@ public class Login extends AppCompatActivity {
 
                         JSONObject json = jArr.getJSONObject(0);
 
-                        SiginDTO sDto = new SiginDTO();
+                        sDto = new SiginDTO();
                         sDto.setEmail(json.getString("email"));
                         sDto.setName(json.getString("name"));
                         sDto.setPwd(json.getString("pwd"));
+                        sDto.setFilename(json.getString("filename"));
 
-                        Log.d("Json_CHK: ",
-                                "GetName : "+ sDto.getName() +
-                                      "  GetEmail : " + sDto.getEmail() +
-                                      "  GetPwd: " + sDto.getPwd());
+                        Log.i("Json_CHK: ", sDto.toString());
 
                         //Log.d("RESPONSE확인-1 :",entity.toString());                // 즉 변수에 저장 -> 저장된 변수를 사용하는 식으로 해야됨.
 
@@ -266,8 +268,9 @@ public class Login extends AppCompatActivity {
 
         editor.putString("pwd", sDto.getPwd());
         editor.putString("email",sDto.getEmail());
+        editor.putString("filename", sDto.getFilename());
 
-        Log.d("!editor! : ", getSharedPreferences("userPref", Activity.MODE_PRIVATE).getString("email", ""));
+        Log.d("editor-DTO확인 : ", sDto.toString());
 
 
         editor.commit();

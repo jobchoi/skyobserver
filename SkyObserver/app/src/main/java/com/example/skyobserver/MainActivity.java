@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +31,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.skyobserver.board.BoardActivity;
 import com.example.skyobserver.member.Login;
 import com.example.skyobserver.member.Mypage;
@@ -52,15 +55,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static GeoPoint tmset;
     public static final int REQUEST_CODE_MENU = 101;
     public static final int REQUEST_CODE_BOARD = 102;
-
     private boolean signupActivityLock = false;
-
     public static final int REQUEST_CODE_PERMISSIONS = 1009;
-
-
     public static ArrayList<MStation> mStion = new ArrayList<>();
 
-
+    ImageView profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
                 //  로그인 상태에 따라 Login Activity
-                signCaller(v);
+                signCaller(v, MainActivity.this);
             }
         });
 
@@ -146,10 +145,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     toolbar.setTitle("Near Station");
                 }
-//                else if (position == 2) {
-//
-//                    toolbar.setTitle("Statistics");
-//                }
             }
 
             @Override
@@ -236,24 +231,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         TextView idtextView =headerview.findViewById(R.id.getidtextView);
         TextView emailtextView =headerview.findViewById(R.id.getemailtextView);
-
+        profile = headerview.findViewById(R.id.headerimageView);
 
 
         Log.d("!=userPref.getAll()=!",userPref.getAll().values().toString());
         if (userPref.getAll().values().toString().length()>2 ) {
             // 필요한 형식을 가져오가너 getAll로 모든 값을 사용.
-//            getData = userPref.getString("name", "");
-//            getData = userPref.getString("id","");
             Log.d("restoreState값확인 : ",userPref.getAll().values().toString());
 
-
             idtextView.setText(userPref.getString("email", ""));
-//            emailtextView.setText(userPref.getString("email",""));
+            String pImge = userPref.getString("filename","");
+
+
+//            RequestOptions requestOptions = new RequestOptions();
+//            requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
+//            requestOptions.skipMemoryCache(true);
+//            requestOptions.signature(new ObjectKey(System.currentTimeMillis()));
+//            requestOptions.transform(new CenterCrop(),new RoundedCorners(20));
+
+
+            Glide.with(this).load(userPref.getString("filename","")).into(profile );
+
+            Log.d("ProfileMypage :",pImge);
+
+
             signupActivityLock = true;
         }
     }
 
-    public void signCaller(View view) {
+    public void signCaller(View view, MainActivity mainActivity) {
         if(!signupActivityLock){
             Log.d("signupActivityLock_확인",Boolean.toString(signupActivityLock));
 
@@ -366,13 +372,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_send) {
             clearState();
 
-//        } else if (id == R.id.nav_tools) {
             NavigationView navigationView = findViewById(R.id.nav_view);
             navigationView.setNavigationItemSelectedListener(this);
             View headerview=navigationView.getHeaderView(0);
 
+            // 프로필 이미지 초기화
+            profile = headerview.findViewById(R.id.headerimageView);
+            profile.setImageResource(R.drawable.logo);
+
+//            android.R.drawable.picture_frame
+
             TextView idtextView =headerview.findViewById(R.id.getidtextView);
             idtextView.setText("로그인을 해주세요");
+
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

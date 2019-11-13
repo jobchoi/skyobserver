@@ -75,8 +75,8 @@
             android:id="@+id/pwd_myRe"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:hint="passwrod 확인"
-            android:inputType="text" />
+            android:hint="passwrod "
+            android:inputType="textPassword" />
 
         <EditText
             android:id="@+id/mypage_nickName"

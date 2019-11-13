@@ -2,7 +2,6 @@ package com.example.skyobserver.member;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -31,6 +30,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 import com.example.skyobserver.Common;
 import com.example.skyobserver.R;
 
@@ -39,7 +44,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -58,7 +62,6 @@ public class Mypage extends AppCompatActivity {
     private static final int REQUEST_CODE = 0;
     private final int REQUEST_CODE_PERMISSIONS = 1001;
 
-    EditText id;
     EditText pwd;
     TextView email;
     EditText nickName;
@@ -160,7 +163,7 @@ public class Mypage extends AppCompatActivity {
 
                 // 저장할 내용
                 dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
-                dos.writeBytes("Content-Disposition: form-data; name=\"id\"\r\n\r\n" + URLEncoder.encode(nickName.getText().toString(), "UTF-8") + lindEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"nickname\"\r\n\r\n" + URLEncoder.encode(nickName.getText().toString(), "UTF-8") + lindEnd);
                 dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
                 dos.writeBytes("Content-Disposition: form-data; name=\"email\"\r\n\r\n" + URLEncoder.encode(email.getText().toString(), "UTF-8") + lindEnd);
                 dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
@@ -185,11 +188,10 @@ public class Mypage extends AppCompatActivity {
                 }
                 dos.writeBytes(twoHyphens + boundary + twoHyphens + lindEnd);
 
-                Log.d("결과 확인 0 : ", nickName.getText().toString());
-                Log.d("결과 확인 1 : ", email.getText().toString());
-                Log.d("결과 확인 2 : ", pwd.getText().toString());
-
-                Log.d("---test-myp--",dos.toString());
+                Log.d("결과_닉네임 : ", nickName.getText().toString());
+                Log.d("결과_email : ", email.getText().toString());
+                Log.d("결과_pwd : ", pwd.getText().toString());
+                Log.d("결과_filename",imageFilePath.toString());
 
                 if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     http_result_ok = "200";
@@ -220,8 +222,6 @@ public class Mypage extends AppCompatActivity {
             }
         }
     }
-    // 사진을 찍었을때 이미지파일을 처리하는 부분
-
 
     /*
      *  이미지 파일을 생성 : 이미지가 저장된 파일을 만드는게 아니라 이미지가 저장될 파일을 만드는 기능
@@ -318,11 +318,13 @@ public class Mypage extends AppCompatActivity {
         Log.d("!=userPref.getAll()=!", userPref.getAll().values().toString());
         if (userPref.getAll().values().toString().length() > 2) {
             // 필요한 형식을 가져오가너 getAll로 모든 값을 사용.
+
             Log.d("restoreState값확인 : ", userPref.getAll().values().toString());
 
             email.setText(userPref.getString("email", ""));
             pwd.setText(userPref.getString("pwd", ""));
             nickName.setText(userPref.getString("name", ""));
+
         }
     }
 
@@ -350,7 +352,6 @@ public class Mypage extends AppCompatActivity {
         } else if (v.getId() == R.id.gallerybtn) {
             takePhoto("gallery");
         } else if (v.getId() == R.id.updateMypagebutton) {
-//            Log.i("imageFilePath", "=======Async start=====" + imageFilePath.toString());
             pwa = new ProductWriteAsync();
             pwa.execute();
         }
