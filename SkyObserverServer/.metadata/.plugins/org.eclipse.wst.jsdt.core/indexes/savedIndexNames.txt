@@ -1,0 +1,2 @@
+INDEX VERSION 1.4+E:\GIT_REFO\SkyObserverServer\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+3678304730.index
