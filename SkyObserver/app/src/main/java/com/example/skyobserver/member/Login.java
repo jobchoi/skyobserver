@@ -116,9 +116,6 @@ public class Login extends AppCompatActivity {
             }
         });
 
-
-
-
         // ---------------- Sign up 버튼 내용 구현----------------
         // 클릭 이벤트시 Listener에서 signup intent로 전환되는 작업을 메스드에서 처리 - 아래에 구현
         signup.setOnClickListener(new View.OnClickListener() {

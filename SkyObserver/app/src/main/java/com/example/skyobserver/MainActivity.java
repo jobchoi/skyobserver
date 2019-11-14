@@ -347,7 +347,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            Toast.makeText(this, "마이페이지 확인", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "마이페이지 확인", Toast.LENGTH_SHORT).show();
+
 
             // 로그인 한 상태이면 Intent 활성화
             // SharedPreferences를 이용하여 Activity 활성화 결정,

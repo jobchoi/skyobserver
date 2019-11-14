@@ -315,16 +315,22 @@ public class Mypage extends AppCompatActivity {
     protected void restoreState() {
         SharedPreferences userPref = getSharedPreferences("userPref", Activity.MODE_PRIVATE);
 
-        Log.d("!=userPref.getAll()=!", userPref.getAll().values().toString());
+        Log.d("mypage","restoreState : "+ userPref.getAll().values().toString());
         if (userPref.getAll().values().toString().length() > 2) {
             // 필요한 형식을 가져오가너 getAll로 모든 값을 사용.
 
-            Log.d("restoreState값확인 : ", userPref.getAll().values().toString());
+            Log.d("mypage","restore : "+ userPref.getAll().values().toString());
+            String filename = userPref.getString("filename","");
 
             email.setText(userPref.getString("email", ""));
             pwd.setText(userPref.getString("pwd", ""));
             nickName.setText(userPref.getString("name", ""));
 
+
+            this.imageView=findViewById(R.id.imageView);
+
+            //Glide.with(this).load(filename)).into(imageView);
+            Glide.with(this).load(filename).into(this.imageView);
         }
     }
 
