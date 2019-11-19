@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.skyobserver.Common;
 import com.example.skyobserver.R;
-import com.example.skyobserver.SiginDTO;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
