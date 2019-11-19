@@ -206,13 +206,12 @@ public class Mypage extends AppCompatActivity {
                         while ((len = in.read(buf)) != -1) {
                             getServerRespon.write(buf, 0, len);
                         }
+
                         System.out.println("return to Server" + new String(getServerRespon.toByteArray(), "UTF-8"));
-
-                        filename = getServerRespon.toByteArray().toString();
-
+                        Log.d("Mypage","profileUpdate ==> "+imageFilePath.toString());
                         SharedPreferences userPref = getSharedPreferences("userPref", Activity.MODE_PRIVATE);
                         SharedPreferences.Editor editor = userPref.edit();
-                        editor.putString("filename",filename);
+                        editor.putString("filename",imageFilePath.toString());
                     }
 
                 } else {
