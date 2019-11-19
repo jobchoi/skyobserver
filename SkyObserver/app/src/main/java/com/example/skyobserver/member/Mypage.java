@@ -208,10 +208,7 @@ public class Mypage extends AppCompatActivity {
                         }
 
                         System.out.println("return to Server" + new String(getServerRespon.toByteArray(), "UTF-8"));
-                        Log.d("Mypage","profileUpdate ==> "+imageFilePath.toString());
-                        SharedPreferences userPref = getSharedPreferences("userPref", Activity.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = userPref.edit();
-                        editor.putString("filename",imageFilePath.toString());
+
                     }
 
                 } else {
@@ -234,6 +231,12 @@ public class Mypage extends AppCompatActivity {
             Log.d("result_ok====> ", http_result_ok);
             if (http_result_ok.equals("200")) {
                 Toast.makeText(Mypage.this, "등록 성공", Toast.LENGTH_SHORT).show();
+
+                Log.d("Mypage","profileUpdate ==> "+imageFilePath.toString());
+                SharedPreferences userPref = getSharedPreferences("userPref", Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = userPref.edit();
+                editor.putString("filename",imageFilePath.toString());
+
                 finish();
             } else {
                 Toast.makeText(Mypage.this, "등록 실패", Toast.LENGTH_SHORT).show();
