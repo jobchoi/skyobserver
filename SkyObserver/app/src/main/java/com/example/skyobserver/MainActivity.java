@@ -38,6 +38,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
 import com.example.skyobserver.board.BoardActivity;
 import com.example.skyobserver.member.Login;
+import com.example.skyobserver.member.MemberDTO;
 import com.example.skyobserver.member.Mypage;
 import com.example.skyobserver.msmap.MStation;
 import com.example.skyobserver.msmap.MeasuringStation;
@@ -61,10 +62,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean signupActivityLock = false;
     public static final int REQUEST_CODE_PERMISSIONS = 1009;
 
+    private MemberDTO mDto;
 
     public static ArrayList<MStation> mStion = new ArrayList<>();
-
-    ImageView profile;
 
     ImageView imageView;
 
@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SharedPreferences userPref = getSharedPreferences("userPref", Activity.MODE_PRIVATE);
         buf = userPref.getString("emails","");
 
+        Log.i("mmmmmm-----","userPref : "+buf);
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -110,9 +111,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        View headerview=navigationView.getHeaderView(0);
+        View headerview = navigationView.getHeaderView(0);
 
-         this.imageView=headerview.findViewById(R.id.headerimageView);
+        // ==================================
+
+        // ==================================
+
+        this.imageView = headerview.findViewById(R.id.headerimageView);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,11 +154,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     toolbar.setTitle("Near Station");
                 }
-//
             }
-
-
-
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
@@ -175,7 +176,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Intent intent2 = new Intent(getApplicationContext(), BoardActivity.class);
                        startActivity(intent2);
 
-
                         return true;
                     case R.id.tab2:
                         Toast.makeText(getApplicationContext(), "두 번째 탭 선택됨", Toast.LENGTH_LONG).show();
@@ -188,7 +188,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             e.printStackTrace();
                         }
 
-
                         Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
                         startActivityForResult(intent, REQUEST_CODE_MENU);
 
@@ -199,9 +198,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-
-
-
+//        Log.d("",);
 
     }
 
@@ -233,11 +230,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 ////            }
 //        });
 
-        //Toast.makeText(this, "onPostResume실행", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "onPostResume실행", Toast.LENGTH_SHORT).show();
         restoreState();
     }
 
     protected void restoreState(){
+        Toast.makeText(this, "메인 액티확인", Toast.LENGTH_SHORT).show();
+        
         SharedPreferences userPref = getSharedPreferences("userPref", Activity.MODE_PRIVATE);
 
 
@@ -260,22 +259,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             idtextView.setText(userPref.getString("email", ""));
             String pImge = userPref.getString("filename","");
 
-            Log.d("restoreState값확인 : ",pImge);
+            Log.d("main","profile-name : "+pImge);
 
 
-                          RequestOptions requestOptions = new RequestOptions();
-               requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
-               requestOptions.skipMemoryCache(true);
-               requestOptions.signature(new ObjectKey(System.currentTimeMillis()));
-               requestOptions.transform(new CenterCrop(), new RoundedCorners(20));
-
+            RequestOptions requestOptions = new RequestOptions();
+            requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
+            requestOptions.skipMemoryCache(true);
+            requestOptions.signature(new ObjectKey(System.currentTimeMillis()));
+            requestOptions.transform(new CenterCrop(), new RoundedCorners(20));
 
                 Glide.with(this)
                     .load(pImge)
                     .apply(requestOptions)
                     .into(imageView);
 
-            Log.d("ProfileMypage :",pImge);
+            Log.d("프로필확인",pImge);
 
 
             signupActivityLock = true;
@@ -384,7 +382,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                Toast.makeText(this, "로그인:NG, Intent 비동작 ", Toast.LENGTH_SHORT).show();
             }
 
-
         } else if (id == R.id.nav_statistics) {
             Intent intent = new Intent(MainActivity.this, Statistics.class);
             startActivity(intent);
@@ -398,15 +395,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             View headerview=navigationView.getHeaderView(0);
 
             // 프로필 이미지 초기화
+            imageView.setImageResource(R.drawable.logo);
 
-            profile.setImageResource(R.drawable.logo);
-
-//            android.R.drawable.picture_frame
-
-            TextView idtextView =headerview.findViewById(R.id.getidtextView);
+            TextView idtextView = headerview.findViewById(R.id.getidtextView);
             idtextView.setText("로그인을 해주세요");
             signupActivityLock=false;
-
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
