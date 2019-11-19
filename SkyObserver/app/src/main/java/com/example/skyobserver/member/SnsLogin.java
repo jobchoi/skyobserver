@@ -1,4 +1,4 @@
-package com.example.skyobserver;
+package com.example.skyobserver.member;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
