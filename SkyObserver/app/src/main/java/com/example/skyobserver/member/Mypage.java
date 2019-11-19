@@ -39,6 +39,7 @@ import com.bumptech.glide.signature.ObjectKey;
 import com.example.skyobserver.Common;
 import com.example.skyobserver.R;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -195,10 +196,28 @@ public class Mypage extends AppCompatActivity {
 
                 if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     http_result_ok = "200";
-                    Log.i("상품 등록 테스트", "성공");
+                    String filename;
+
+                    Log.i("서버통신", "성공");
+
+                    try (InputStream in = conn.getInputStream(); ByteArrayOutputStream getServerRespon = new ByteArrayOutputStream()) {
+                        byte[] buf = new byte[1024 * 8];
+                        int len = 0;
+                        while ((len = in.read(buf)) != -1) {
+                            getServerRespon.write(buf, 0, len);
+                        }
+                        System.out.println("return to Server" + new String(getServerRespon.toByteArray(), "UTF-8"));
+
+                        filename = getServerRespon.toByteArray().toString();
+
+                        SharedPreferences userPref = getSharedPreferences("userPref", Activity.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = userPref.edit();
+                        editor.putString("filename",filename);
+                    }
+
                 } else {
                     Log.i("conn.getResponseCode()", "" + conn.getResponseCode());
-                    Log.i("상품 등록 테스트", "실패");
+                    Log.i("서버통신", "실패");
                 }
 
                 fis.close();
