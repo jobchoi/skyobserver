@@ -62,8 +62,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean signupActivityLock = false;
     public static final int REQUEST_CODE_PERMISSIONS = 1009;
 
-    private MemberDTO mDto;
-
     public static ArrayList<MStation> mStion = new ArrayList<>();
 
     ImageView imageView;
@@ -261,7 +259,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             Log.d("main","profile-name : "+pImge);
 
-
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
             requestOptions.skipMemoryCache(true);
@@ -435,8 +432,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         public int getCount() {
             return tabCount;
         }
-
-
 
     }
 
