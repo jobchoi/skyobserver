@@ -15,40 +15,13 @@
             android:textSize="25sp"
             android:textStyle="italic" />
 
-
-            <TextView
-                android:id="@+id/mypage_email"
-                android:layout_width="193dp"
-                android:layout_height="30dp"
-                android:hint="email" />
-
-            <Button
-                android:id="@+id/mypage_camerabtn"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@drawable/button"
-                android:drawableTop="@android:drawable/ic_menu_camera"
-                android:onClick="onClick"
-                android:padding="10dp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/gallerybtn"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/button"
-                android:drawableTop="@android:drawable/ic_menu_gallery"
-                android:onClick="onClick"
-                android:padding="9dp"
-                android:textStyle="bold" />
-
-        <FrameLayout
+    <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal">
 
             <ImageView
+                android:textAlignment="center"
                 android:id="@+id/imageView"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
@@ -63,41 +36,144 @@
                 android:textSize="10dp"
                 android:visibility="gone" />
         </FrameLayout>
+
+    <TextView
+        android:id="@+id/mypage_email"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:hint="email"
+        android:textAlignment="center" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="100dp"
+        android:layout_marginBottom="5sp">
+
+        <Button
+            android:id="@+id/mypage_camerabtn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button"
+            android:drawableTop="@android:drawable/ic_menu_camera"
+            android:onClick="onClick"
+            android:padding="10dp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/gallerybtn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/button"
+            android:drawableTop="@android:drawable/ic_menu_gallery"
+            android:onClick="onClick"
+            android:padding="10dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="100dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5sp">
+
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Password : "
+            android:textAlignment="center" />
+
         <EditText
             android:id="@+id/pwd_my"
             android:layout_width="150dp"
-            android:layout_height="35dp"
-            android:textSize="15sp"
-            android:hint="password 입력"
-            android:inputType="textPassword" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="5dp"
+            android:inputType="textPassword"
+            android:textSize="10sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="100dp"
+        android:layout_marginBottom="5sp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:text="PasswordChk : "
+            android:textAlignment="center" />
 
         <EditText
             android:id="@+id/pwd_myRe"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:hint="passwrod "
-            android:inputType="textPassword" />
+            android:layout_marginBottom="10dp"
+            android:inputType="textPassword"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="100dp"
+        android:layout_marginBottom="5sp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:text="별명을입력해주세요 : "
+            android:textAlignment="center" />
 
         <EditText
             android:id="@+id/mypage_nickName"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
+            android:textSize="14sp"
             android:layout_height="wrap_content"
-            android:hint="별명을 입력해주세요."/>
+            android:layout_marginBottom="10dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="297dp"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="100dp"
+        android:layout_marginBottom="5sp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="14dp"
+            android:text="사용자위치 : "
+            android:textAlignment="center" />
 
         <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="사용자 위치" />
+            android:layout_width="154dp"
+            android:layout_height="50dp"
+            android:textSize="10sp" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="100dp"
+        android:layout_marginBottom="5sp">
 
         <Button
             android:id="@+id/myp_buttonCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
             android:text="취소"
             android:textColor="#ff0000"
             android:textSize="15sp" />

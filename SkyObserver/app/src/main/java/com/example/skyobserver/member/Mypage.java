@@ -56,7 +56,7 @@ public class Mypage extends AppCompatActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 672;
     private String imageFilePath = null;
     private Uri photoUri;
-    ProductWriteAsync pwa;
+    userUpdateWriteAsync pwa;
     File photoFile;
     URL url;
     File imgFile;
@@ -121,7 +121,7 @@ public class Mypage extends AppCompatActivity {
         });
     }
 
-    private class ProductWriteAsync extends AsyncTask<String, String, String> {
+    private class userUpdateWriteAsync extends AsyncTask<String, String, String> {
 
         @Override
         protected String doInBackground(String... URI) {
@@ -192,7 +192,7 @@ public class Mypage extends AppCompatActivity {
                 Log.d("결과_닉네임 : ", nickName.getText().toString());
                 Log.d("결과_email : ", email.getText().toString());
                 Log.d("결과_pwd : ", pwd.getText().toString());
-                Log.d("결과_filename",imageFilePath.toString());
+//                Log.d("결과_filename",imageFilePath.toString());
 
                 if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     http_result_ok = "200";
@@ -379,7 +379,8 @@ public class Mypage extends AppCompatActivity {
         } else if (v.getId() == R.id.gallerybtn) {
             takePhoto("gallery");
         } else if (v.getId() == R.id.updateMypagebutton) {
-            pwa = new ProductWriteAsync();
+
+            pwa = new userUpdateWriteAsync();
             pwa.execute();
         }
     }
@@ -412,7 +413,6 @@ public class Mypage extends AppCompatActivity {
 
             Toast.makeText(getApplicationContext(), "사진 파일 선택", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     /*
