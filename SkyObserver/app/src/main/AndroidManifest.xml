@@ -20,6 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".iot.IoT"></activity>
         <activity android:name=".statistics.sejong" />
         <activity android:name=".statistics.jeju" />
         <activity android:name=".statistics.gyeongnam" />

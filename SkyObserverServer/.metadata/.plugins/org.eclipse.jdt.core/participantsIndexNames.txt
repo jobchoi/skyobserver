@@ -1,3 +1,0 @@
-INDEX VERSION 1.131
-E:\GIT_REFO\SkyObserverServer\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\820885823.index
-\ob\src
