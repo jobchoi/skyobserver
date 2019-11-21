@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,8 +36,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
 import com.example.skyobserver.board.BoardActivity;
+import com.example.skyobserver.iot.IoT;
 import com.example.skyobserver.member.Login;
-import com.example.skyobserver.member.MemberDTO;
 import com.example.skyobserver.member.Mypage;
 import com.example.skyobserver.msmap.MStation;
 import com.example.skyobserver.msmap.MeasuringStation;
@@ -176,7 +175,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                         return true;
                     case R.id.tab2:
-                        Toast.makeText(getApplicationContext(), "두 번째 탭 선택됨", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "IoT", Toast.LENGTH_LONG).show();
+                        if(signupActivityLock){
+                            Intent intent_iot = new Intent(getApplicationContext(), IoT.class);
+                            startActivity(intent_iot);
+                        }
                         return true;
                     case R.id.tab3:
                         MeasuringStation ms = new MeasuringStation(MainActivity.this);
@@ -233,8 +236,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     protected void restoreState(){
-        Toast.makeText(this, "메인 액티확인", Toast.LENGTH_SHORT).show();
-        
         SharedPreferences userPref = getSharedPreferences("userPref", Activity.MODE_PRIVATE);
 
 
@@ -272,7 +273,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             Log.d("프로필확인",pImge);
 
-
             signupActivityLock = true;
         }
     }
@@ -294,6 +294,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       //  Toast.makeText(this, "clearState실행", Toast.LENGTH_SHORT).show();
         //TextView idtextView =findViewById(R.id.getidtextView);
         //idtextView.clearComposingText();
+
+        signupActivityLock = false;
         editor.clear();
         editor.commit();
     }
