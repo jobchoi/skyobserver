@@ -51,7 +51,7 @@ public class Login extends AppCompatActivity {
     String resPhoneStr;
     EditText email;
     EditText pwd;
-    public static SiginDTO sDto;
+    public static MemberDTO sDto = new MemberDTO();
 
     ImageView navigationView;
 
@@ -137,7 +137,7 @@ public class Login extends AppCompatActivity {
         super.onPostResume();
     }
 
-    public class SendSignDataTask extends AsyncTask<Void, Void, SiginDTO> {
+    public class SendSignDataTask extends AsyncTask<Void, Void, MemberDTO> {
         Activity activity;
 
         public SendSignDataTask(Activity activity) {
@@ -151,15 +151,15 @@ public class Login extends AppCompatActivity {
             super.onPreExecute();
         }
 
-        protected SiginDTO doInBackground(Void... Void) {
-            SiginDTO resultsDto = executeSend();
+        protected MemberDTO doInBackground(Void... Void) {
+            MemberDTO resultsDto = executeSend();
             Log.d("결과값 : ", "EXECUTE 실행" + resultsDto.toString());
             return resultsDto;
         }
 
         @Override
         // Thread 마치고 수행할 메서드
-        protected void onPostExecute(SiginDTO s) {
+        protected void onPostExecute(MemberDTO s) {
             super.onPostExecute(s);
 
             // ((Login)activity).getMainData(s);
@@ -176,7 +176,7 @@ public class Login extends AppCompatActivity {
         }
     }
 
-    public SiginDTO executeSend() {
+    public MemberDTO executeSend() {
         ArrayList<NameValuePair> post = new ArrayList<NameValuePair>();
 
         email = findViewById(R.id.loginEmail);
@@ -218,7 +218,7 @@ public class Login extends AppCompatActivity {
 
                         JSONObject json = jArr.getJSONObject(0);
 
-                        sDto = new SiginDTO();
+                        sDto = new MemberDTO();
                         sDto.setEmail(json.getString("email"));
                         sDto.setName(json.getString("name"));
                         sDto.setPwd(json.getString("pwd"));
@@ -247,7 +247,7 @@ public class Login extends AppCompatActivity {
         startActivity(intent);
     }
 
-    protected void saveState(SiginDTO sDto) {
+    protected void saveState(MemberDTO sDto) {
         SharedPreferences userPref = getSharedPreferences("userPref", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = userPref.edit();
 
