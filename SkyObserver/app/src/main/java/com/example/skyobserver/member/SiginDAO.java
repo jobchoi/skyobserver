@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.skyobserver.Common;
-import com.example.skyobserver.RequestHttpURLConnection;
 
 public class SiginDAO {
     public void sendSigninData(){

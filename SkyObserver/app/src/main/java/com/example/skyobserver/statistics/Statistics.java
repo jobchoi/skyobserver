@@ -38,193 +38,194 @@ public class Statistics extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
 
-        Button seoul = findViewById(R.id.seoul);
+        final  Button seoul = findViewById(R.id.seoul);
         seoul.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Seoul.class);
-                intent.putExtra("titleMsg", "서울");
-
+                Intent intent = new Intent(getApplicationContext(), Region.class);
+                intent.putExtra("titleMsg", "seoul");
+                intent.putExtra("region",seoul.getText().toString());
                 startActivityForResult(intent, REQUEST_CODE_seoul);
             }
         });
 
-        Button busan = findViewById(R.id.busan);
+        final Button busan = findViewById(R.id.busan);
         busan.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), com.example.skyobserver.statistics.busan.class);
-                intent.putExtra("titleMsg", "부산");
 
+                Intent intent = new Intent(getApplicationContext(), Region.class);
+                intent.putExtra("titleMsg", "Region");
+                intent.putExtra("region",busan.getText().toString());
                 startActivityForResult(intent, REQUEST_CODE_busan);
             }
         });
 
 
-        Button daegu = findViewById(R.id.daegu);
+        final  Button daegu = findViewById(R.id.daegu);
         daegu.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), com.example.skyobserver.statistics.daegu.class);
-                intent.putExtra("titleMsg", "대구");
-
+                Intent intent = new Intent(getApplicationContext(), Region.class);
+                intent.putExtra("titleMsg", "daegu");
+                intent.putExtra("region",daegu.getText().toString());
                 startActivityForResult(intent, REQUEST_CODE_daegu);
             }
         });
-        Button incheon = findViewById(R.id.incheon);
+        final Button incheon = findViewById(R.id.incheon);
         incheon.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), incheon.class);
-                intent.putExtra("titleMsg", "인천");
-
+                Intent intent = new Intent(getApplicationContext(), Region.class);
+                intent.putExtra("titleMsg", "incheon");
+                intent.putExtra("region",incheon.getText().toString());
                 startActivityForResult(intent, REQUEST_CODE_incheon);
             }
         });
-        Button gwangju = findViewById(R.id.gwangju);
+        final  Button gwangju = findViewById(R.id.gwangju);
         gwangju.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), gwangju.class);
-                intent.putExtra("titleMsg", "광주");
-
+                Intent intent = new Intent(getApplicationContext(), Region.class);
+                intent.putExtra("titleMsg", "gwangju");
+                intent.putExtra("region",gwangju.getText().toString());
                 startActivityForResult(intent, REQUEST_CODE_gwangju);
             }
         });
-        Button daejeon = findViewById(R.id.daejeon);
+        final  Button daejeon = findViewById(R.id.daejeon);
         daejeon.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), daejeon.class);
-                intent.putExtra("titleMsg", "대전");
-
+                Intent intent = new Intent(getApplicationContext(), Region.class);
+                intent.putExtra("titleMsg", "daejeon");
+                intent.putExtra("region",daejeon.getText().toString());
                 startActivityForResult(intent, REQUEST_CODE_daejeon);
             }
         });
-        Button ulsan = findViewById(R.id.ulsan);
+        final  Button ulsan = findViewById(R.id.ulsan);
         ulsan.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), com.example.skyobserver.statistics.ulsan.class);
-                intent.putExtra("titleMsg", "울산");
-
+                Intent intent = new Intent(getApplicationContext(), Region.class);
+                intent.putExtra("titleMsg", "ulsan");
+                intent.putExtra("region",ulsan.getText().toString());
                 startActivityForResult(intent, REQUEST_CODE_ulsan);
             }
         });
-        Button gyeonggi = findViewById(R.id.gyeonggi);
+        final  Button gyeonggi = findViewById(R.id.gyeonggi);
         gyeonggi.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), com.example.skyobserver.statistics.gyeonggi.class);
-                intent.putExtra("titleMsg", "경기");
-
+                Intent intent = new Intent(getApplicationContext(), Region.class);
+                intent.putExtra("titleMsg", "gyeonggi");
+                intent.putExtra("region",gyeonggi.getText().toString());
                 startActivityForResult(intent, REQUEST_CODE_gyeonggi);
             }
         });
-        Button gangwon = findViewById(R.id.gangwon);
+        final Button gangwon = findViewById(R.id.gangwon);
         gangwon.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), com.example.skyobserver.statistics.gangwon.class);
-                intent.putExtra("titleMsg", "강원");
-
+                Intent intent = new Intent(getApplicationContext(), Region.class);
+                intent.putExtra("titleMsg", "gangwon");
+                intent.putExtra("region",gangwon.getText().toString());
                 startActivityForResult(intent, REQUEST_CODE_gangwon);
             }
         });
-        Button chungbuk = findViewById(R.id.chungbuk);
+        final  Button chungbuk = findViewById(R.id.chungbuk);
         chungbuk.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), com.example.skyobserver.statistics.chungbuk.class);
-                intent.putExtra("titleMsg", "충북");
-
+                Intent intent = new Intent(getApplicationContext(), Region.class);
+                intent.putExtra("titleMsg", "chungbuk");
+                intent.putExtra("region",chungbuk.getText().toString());
                 startActivityForResult(intent, REQUEST_CODE_chungbuk);
             }
         });
-        Button chungnam = findViewById(R.id.chungnam);
+        final Button chungnam = findViewById(R.id.chungnam);
         chungnam.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), chungnam.class);
-                intent.putExtra("titleMsg", "충남");
-
+                Intent intent = new Intent(getApplicationContext(), Region.class);
+                intent.putExtra("titleMsg", "chungnam");
+                intent.putExtra("region",chungnam.getText().toString());
                 startActivityForResult(intent, REQUEST_CODE_chungnam);
             }
         });
-        Button jeonbuk = findViewById(R.id.jeonbuk);
+        final Button jeonbuk = findViewById(R.id.jeonbuk);
         jeonbuk.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), com.example.skyobserver.statistics.jeonbuk.class);
-                intent.putExtra("titleMsg", "전북");
-
+                Intent intent = new Intent(getApplicationContext(), Region.class);
+                intent.putExtra("titleMsg", "jeonbuk");
+                intent.putExtra("region",jeonbuk.getText().toString());
                 startActivityForResult(intent, REQUEST_CODE_jeonbuk);
             }
         });
-        Button jeonnam = findViewById(R.id.jeonnam);
+        final  Button jeonnam = findViewById(R.id.jeonnam);
         jeonnam.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), com.example.skyobserver.statistics.jeonnam.class);
-                intent.putExtra("titleMsg", "전남");
-
+                Intent intent = new Intent(getApplicationContext(), Region.class);
+                intent.putExtra("titleMsg", "jeonnam");
+                intent.putExtra("region",jeonnam.getText().toString());
                 startActivityForResult(intent, REQUEST_CODE_jeonnam);
             }
         });
-        Button gyeongbuk = findViewById(R.id.gyeongbuk);
+        final Button gyeongbuk = findViewById(R.id.gyeongbuk);
         gyeongbuk.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), gyeongbuk.class);
-                intent.putExtra("titleMsg", "경북");
-
+                Intent intent = new Intent(getApplicationContext(), Region.class);
+                intent.putExtra("titleMsg", "gyeongbuk");
+                intent.putExtra("region",gyeongbuk.getText().toString());
                 startActivityForResult(intent, REQUEST_CODE_gyeongbuk);
             }
         });
-        Button gyeongnam = findViewById(R.id.gyeongnam);
+        final  Button gyeongnam = findViewById(R.id.gyeongnam);
         gyeongnam.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), gyeongnam.class);
-                intent.putExtra("titleMsg", "경남");
-
+                Intent intent = new Intent(getApplicationContext(), Region.class);
+                intent.putExtra("titleMsg", "gyeongnam");
+                intent.putExtra("region",gyeongnam.getText().toString());
                 startActivityForResult(intent, REQUEST_CODE_gyeongnam);
             }
         });
-        Button jeju = findViewById(R.id.jeju);
+        final  Button jeju = findViewById(R.id.jeju);
         jeju.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), com.example.skyobserver.statistics.jeju.class);
-                intent.putExtra("titleMsg", "제주");
-
+                Intent intent = new Intent(getApplicationContext(), Region.class);
+                intent.putExtra("titleMsg", "jeju");
+                intent.putExtra("region",jeju.getText().toString());
                 startActivityForResult(intent, REQUEST_CODE_jeju);
             }
         });
-        Button sejong = findViewById(R.id.sejong);
+        final Button sejong = findViewById(R.id.sejong);
         sejong.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), com.example.skyobserver.statistics.sejong.class);
-                intent.putExtra("titleMsg", "세종");
-
+                Intent intent = new Intent(getApplicationContext(), Region.class);
+                intent.putExtra("titleMsg", "sejong");
+                intent.putExtra("region",sejong.getText().toString());
                 startActivityForResult(intent, REQUEST_CODE_sejong);
             }
         });

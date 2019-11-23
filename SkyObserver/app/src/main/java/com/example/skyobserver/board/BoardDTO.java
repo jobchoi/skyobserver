@@ -16,8 +16,11 @@ public class BoardDTO {
     private String RE_LEVEL;
     private String FILENAME;
     private String ID;
+    private String name;
+    private String email;
 
-    public BoardDTO(String ARTICLENO, String SUBJECT, String CONTENT, String PASSWD, String REG_DATE, String READCOUNT, String REF, String RE_STEP, String RE_LEVEL, String FILENAME, String ID) {
+
+    public BoardDTO(String ARTICLENO, String SUBJECT, String CONTENT, String PASSWD, String REG_DATE, String READCOUNT, String REF, String RE_STEP, String RE_LEVEL, String FILENAME, String ID, String name, String email) {
         this.ARTICLENO = ARTICLENO;
         this.SUBJECT = SUBJECT;
         this.CONTENT = CONTENT;
@@ -29,6 +32,24 @@ public class BoardDTO {
         this.RE_LEVEL = RE_LEVEL;
         this.FILENAME = FILENAME;
         this.ID = ID;
+        this.name = name;
+        this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getARTICLENO() {
@@ -133,6 +154,8 @@ public class BoardDTO {
                 ", RE_LEVEL='" + RE_LEVEL + '\'' +
                 ", FILENAME='" + FILENAME + '\'' +
                 ", ID='" + ID + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
                 '}';
     }
 

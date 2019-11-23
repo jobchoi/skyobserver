@@ -138,7 +138,7 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> 
         public void setItem(BoardDTO item) {
 
             boardTitle.setText(item.getSUBJECT());
-            boardId.setText(item.getID());
+            boardId.setText(item.getName());
             content.setText(item.getCONTENT());
 
 

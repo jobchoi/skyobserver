@@ -1,0 +1,180 @@
+package com.example.skyobserver.board;
+
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.TextView;
+
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.skyobserver.R;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+
+
+public class BoardActivity extends AppCompatActivity {
+
+    BoardAdapter boardAdapter;
+    RecyclerView recyclerView;
+    ArrayList<BoardDTO> data = new ArrayList<>();
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_board);
+
+
+
+        ActionBar actionBar=getSupportActionBar();
+       //actionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP|ActionBar.DISPLAY_SHOW_HOME|ActionBar.DISPLAY_SHOW_TITLE);
+        actionBar.setTitle("게시판");
+
+        recyclerView = findViewById(R.id.boardRecyclerView);
+
+
+        try {
+            new BoadList().execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+
+
+        }
+
+
+        recyclerView.setHasFixedSize(false);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+
+        boardAdapter = new BoardAdapter(data);
+        recyclerView.setAdapter(boardAdapter);
+
+
+    }
+
+
+    public class BoadList extends AsyncTask<String, Void, ArrayList<BoardDTO>> {
+
+        ArrayList<BoardDTO> data = new ArrayList<>();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected ArrayList<BoardDTO> doInBackground(String... strings) {
+
+            String url = "http://192.168.0.14:8081/hanulshop/AndroidProductJsonAction.hanul";
+            try {
+
+
+                String jsonPage8 = getStringFromUrl(url);
+
+
+                JSONObject json9 = new JSONObject(jsonPage8);
+                JSONArray jArr = json9.getJSONArray("BOARD");
+
+                for (int i = 0; i < jArr.length(); i++) {
+
+                    json9 = jArr.getJSONObject(i);
+
+
+                    String articleno = json9.getString("ARTICLENO");
+                    String subject = json9.getString("SUBJECT");
+                    String content = json9.getString("CONTENT");
+                    String passwd = json9.getString("PASSWD");
+                    String reg_date = json9.getString("REG_DATE");
+                    String readcount = json9.getString("READCOUNT");
+                    String ref = json9.getString("REF");
+                    String re_step = json9.getString("RE_STEP");
+                    String re_level = json9.getString("RE_LEVEL");
+                    String filename = json9.getString("FILENAME");
+                    String id = json9.getString("ID");
+
+
+                    BoardDTO boardDTO = new BoardDTO(articleno, subject, content, passwd, reg_date, readcount, ref, re_step, re_level, filename, id);
+                    this.data.add(boardDTO);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+            return data;
+        }
+
+        public String getStringFromUrl(String pUrl) {
+            BufferedReader bufreader = null;
+            HttpURLConnection urlConnection = null;
+
+            StringBuffer page = new StringBuffer();
+            Exception er = null;
+            try {
+
+
+                URL url = new URL(pUrl);
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setConnectTimeout(3000);
+
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setDoOutput(true);
+                urlConnection.setDoInput(true);
+                urlConnection.setUseCaches(false);
+                urlConnection.setDefaultUseCaches(false);
+
+                InputStream contentStream = urlConnection.getInputStream();
+
+                bufreader = new BufferedReader(new InputStreamReader(contentStream, "UTF-8"));
+                String line = null;
+
+
+                while ((line = bufreader.readLine()) != null) {
+                    Log.d("line:", line);
+                    page.append(line);
+                }
+
+            } catch (IOException e) {
+                TextView textView = findViewById(R.id.alert1);
+                textView.setText("서버를 확인해주세요");
+            } finally {
+
+
+
+
+                try {
+                    bufreader.close();
+                    urlConnection.disconnect();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return page.toString();
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<BoardDTO> data) {
+            boardAdapter = new BoardAdapter(data);
+            recyclerView.setAdapter(boardAdapter);
+
+        }
+    }
+
+}
