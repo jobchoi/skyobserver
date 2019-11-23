@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class mainfragementDTO implements Serializable{
 
+    private String  itemCode;
     private String  seoul ;
     private String  busan;
     private String  daegu;
@@ -22,9 +23,67 @@ public class mainfragementDTO implements Serializable{
     private String jeju ;
     private String sejong ;
 
+
+    public String getItemCode() {
+        return itemCode;
+    }
+
+    public void setItemCode(String itemCode) {
+        this.itemCode = itemCode;
+    }
+
     public mainfragementDTO(){
 
     }
+
+
+    public String getRegion(String region){
+
+
+        switch(region){
+            case "seoul":
+               return  seoul;
+            case   "busan":
+                return  busan;
+            case  "daegu":
+                return  daegu;
+            case   "incheon":
+                return  incheon;
+            case   "gwangju":
+                return  gwangju;
+            case  "daejeon":
+                return  daejeon;
+            case  "ulsan":
+                return  ulsan;
+            case  "gyeonggi":
+                return  gyeonggi;
+            case   "gangwon":
+                return  gangwon;
+            case   "chungbuk":
+                return  chungbuk;
+            case   "chungnam":
+                return  chungnam;
+            case   "jeonbuk":
+                return  jeonbuk;
+            case   "jeonnam":
+                return  jeonnam;
+            case  "gyeongbuk":
+                return  gyeongbuk;
+            case  "gyeongnam":
+                return  gyeongnam;
+            case   "jeju":
+                return  jeju;
+            case   "sejong":
+                return  sejong;
+
+
+        }
+
+
+
+        return null;
+    }
+
 
     public String getSeoul() {
         return seoul;
@@ -165,7 +224,8 @@ public class mainfragementDTO implements Serializable{
     @Override
     public String toString() {
         return "mainfragementDTO{" +
-                "seoul='" + seoul + '\'' +
+                "itemCode='" + itemCode + '\'' +
+                ", seoul='" + seoul + '\'' +
                 ", busan='" + busan + '\'' +
                 ", daegu='" + daegu + '\'' +
                 ", incheon='" + incheon + '\'' +
@@ -185,7 +245,8 @@ public class mainfragementDTO implements Serializable{
                 '}';
     }
 
-    public mainfragementDTO(String seoul, String busan, String daegu, String incheon, String gwangju, String daejeon, String ulsan, String gyeonggi, String gangwon, String chungbuk, String chungnam, String jeonbuk, String jeonnam, String gyeongbuk, String gyeongnam, String jeju, String sejong) {
+    public mainfragementDTO(String itemCode, String seoul, String busan, String daegu, String incheon, String gwangju, String daejeon, String ulsan, String gyeonggi, String gangwon, String chungbuk, String chungnam, String jeonbuk, String jeonnam, String gyeongbuk, String gyeongnam, String jeju, String sejong) {
+        this.itemCode=itemCode;
         this.seoul = seoul;
         this.busan = busan;
         this.daegu = daegu;

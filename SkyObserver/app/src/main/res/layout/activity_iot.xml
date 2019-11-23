@@ -41,7 +41,8 @@
             android:layout_height="150dp"
             android:layout_marginLeft="30dp"
             tools:layout_editor_absoluteX="25dp"
-            tools:layout_editor_absoluteY="88dp" />
+            tools:layout_editor_absoluteY="88dp"
+            android:id="@+id/iotbutton1"/>
         <ImageButton
             android:layout_width="170dp"
             android:layout_height="150dp"

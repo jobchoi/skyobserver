@@ -6,6 +6,7 @@
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality.
     -->
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -20,31 +21,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".iot.IoT"></activity>
-        <activity android:name=".statistics.sejong" />
-        <activity android:name=".statistics.jeju" />
-        <activity android:name=".statistics.gyeongnam" />
-        <activity android:name=".statistics.gyeongbuk" />
-        <activity android:name=".statistics.jeonnam" />
-        <activity android:name=".statistics.jeonbuk" />
-        <activity android:name=".statistics.chungnam" />
-        <activity android:name=".statistics.chungbuk" />
-        <activity android:name=".statistics.gangwon" />
-        <activity android:name=".statistics.gyeonggi" />
-        <activity android:name=".statistics.ulsan" />
-        <activity android:name=".statistics.daejeon" />
-        <activity android:name=".statistics.gwangju" />
-        <activity android:name=".statistics.incheon" />
-        <activity android:name=".statistics.daegu" />
-        <activity android:name=".statistics.busan" />
-        <activity android:name=".statistics.Seoul" />
+        <activity android:name=".statistics.Region" />
         <activity
             android:name=".statistics.Statistics"
             android:label="미세먼지 통계" />
         <activity android:name=".member.Signup" />
-        <activity android:name=".member.Mypage" />
         <activity android:name=".member.Login" />
-        <activity android:name=".board.BoardWrite" />
+        <activity android:name=".member.Mypage" />
+
+        <activity android:name=".board.BoardWrite"  />
         <activity android:name=".board.BoardActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -61,9 +46,10 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
+        <activity android:name=".iot.IoT"/>
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name"
+            android:label="Sky Observer"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -71,7 +57,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.skyobserver"
@@ -81,6 +66,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+
+
+
     </application>
 
 </manifest>

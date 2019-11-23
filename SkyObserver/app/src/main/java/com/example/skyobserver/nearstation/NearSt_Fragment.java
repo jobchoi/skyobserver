@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.skyobserver.GeoPoint;
 import com.example.skyobserver.MainActivity;
@@ -35,10 +36,13 @@ public class NearSt_Fragment extends Fragment {
     GeoPoint tmset;
     RecyclerView recyclerView;
     ArrayList<NStationDTO> data=new ArrayList<>();
-
+    SwipeRefreshLayout mSwipeRefreshLayout;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
     }
 
     @Nullable
@@ -48,20 +52,12 @@ public class NearSt_Fragment extends Fragment {
 
         View view=inflater.inflate(R.layout.nearst_fragment,container,false);
 
-
-        return view;
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        recyclerView=getView().findViewById(R.id.recyclerView);
+        recyclerView=view.findViewById(R.id.recyclerView);
 
         tmset= MainActivity.tmset;
-        String XY[]={String.valueOf(tmset.getX()), String.valueOf(tmset.getY())};
+        final String XY[]={String.valueOf(tmset.getX()), String.valueOf(tmset.getY())};
         try {
-            new NearStation().execute(XY);
+            new NearStation().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,XY);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -74,8 +70,43 @@ public class NearSt_Fragment extends Fragment {
         nAdapter=new NStationAdapter(data);
         recyclerView.setAdapter(nAdapter);
 
+        mSwipeRefreshLayout = view.findViewById(R.id.nearStationSwipe);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                nAdapter=null;
+
+
+                try {
+                    new NearStation().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,XY);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+
+        });
+
+        return view;
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
+    }
+
+
 
     public class NearStation extends AsyncTask<String, Void, ArrayList<NStationDTO>> {
 

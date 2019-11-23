@@ -13,48 +13,67 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.skyobserver.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReplyListAdapter extends ArrayAdapter<ArticleReplyDTO>  {
+public class ReplyListAdapter extends RecyclerView.Adapter<ReplyListAdapter.ViewHolder> {
 
 
     Context context;
     ArrayList<ArticleReplyDTO> aDto; // 상품 목록
 
-    public ReplyListAdapter(@NonNull Context context, int resource, @NonNull ArrayList<ArticleReplyDTO> aDto) {
-        super(context, resource, aDto);
-        this.context=context;
+    public ReplyListAdapter(@NonNull Context context, @NonNull ArrayList<ArticleReplyDTO> aDto) {
+         this.context=context;
         this.aDto=aDto;
     }
 
 
-    public int getCount() {
-        return aDto.size();
-    }
 
     public ArticleReplyDTO getItem(int position) { // 상품 목록(Products) 중 position번째의 상품(Product)
         return aDto.get(position);
+    }
+
+    @NonNull
+    @Override
+    public ReplyListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view=LayoutInflater.from(parent.getContext()).inflate(R.layout.replylist,parent,false);
+
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ReplyListAdapter.ViewHolder holder, int position) {
+
+        ArticleReplyDTO item=aDto.get(position);
+        holder.nicname.setText(item.getName()); // 홀더를 이용하여 p_price2 대입
+        holder.recontent.setText(item.getReplycon()); // 홀더를 이용하여 p_name 대입
+
     }
 
     public long getItemId(int position) {
         return position;
     }
 
+    @Override
+    public int getItemCount() {
+        return  aDto.size();
+    }
+
     public View getView(int position, View convertView, ViewGroup parent) {
         try {
-            final ProductListViewHolder holder;
+            final ViewHolder holder;
             // 어댑터에서 레이아웃 준비
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             if (convertView != null) { // 뷰홀더가 있다면 뷰 홀더를 사용
-                holder = (ProductListViewHolder) convertView.getTag();
+                holder = (ViewHolder) convertView.getTag();
             } else { // 뷰홀더가 없다면 뷰 홀더 생성, 하나의 아이템이 하나의 홀더.
                 // findViewById() 컴포넌트 생성 부분이 뷰홀더로 들어감.
-                holder = new ProductListViewHolder(convertView = inflater.inflate(R.layout.replylist, null));
+                holder = new ViewHolder(convertView = inflater.inflate(R.layout.replylist, null));
             }
 
            /* if (aDto.get(position).getP_imgUrl() != null) { // 이미지 주소가 있다면
@@ -70,6 +89,9 @@ public class ReplyListAdapter extends ArrayAdapter<ArticleReplyDTO>  {
                 holder.productImageView.setImageResource(R.drawable.images_empty);
             }*/
 
+//            ViewGroup.LayoutParams layoutParams=convertView.getLayoutParams();
+//            layoutParams.height=100;
+//            convertView.setLayoutParams(layoutParams);
 
             holder.nicname.setText(aDto.get(position).getName()); // 홀더를 이용하여 p_price2 대입
             holder.recontent.setText(aDto.get(position).getReplycon()); // 홀더를 이용하여 p_name 대입
@@ -93,14 +115,15 @@ public class ReplyListAdapter extends ArrayAdapter<ArticleReplyDTO>  {
     }*/
 
 
-    class ProductListViewHolder {
-        public TextView nicname;
-        public TextView recontent;
+    static class ViewHolder extends RecyclerView.ViewHolder {
+       TextView nicname;
+        TextView recontent;
 
-        public ProductListViewHolder(View view) {
+        public ViewHolder(View view) {
+            super(view);
             nicname = view.findViewById(R.id.renicname);
             recontent = view.findViewById(R.id.recontent);
-            view.setTag(this);
+
         }
     }
 

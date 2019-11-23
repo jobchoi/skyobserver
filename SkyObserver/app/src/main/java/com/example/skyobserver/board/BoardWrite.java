@@ -1,8 +1,10 @@
 package com.example.skyobserver.board;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -35,6 +37,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
+import com.example.skyobserver.Common;
 import com.example.skyobserver.R;
 
 import java.io.BufferedReader;
@@ -71,7 +74,7 @@ public class BoardWrite extends AppCompatActivity {
 
     Button sendBtn;
 
-    String sendUrl = "http://192.168.0.14:8081/hanulshop/androidwrite.hanul";
+    String sendUrl = Common.SERVER_URL+"/androidwrite.hanul";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,6 +152,12 @@ public class BoardWrite extends AppCompatActivity {
 
         imageView = findViewById(R.id.imageView);
         title1 = findViewById(R.id.titleboardwww);
+//        p_price1 = findViewById(R.id.p_price1);
+//        p_price2 = findViewById(R.id.p_price2);
+//        p_content = findViewById(R.id.p_content);
+//        sendBtn = findViewById(R.id.sendBtn);
+//
+//        Toast.makeText(getApplicationContext(), p_name.getText().toString(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -184,7 +193,7 @@ public class BoardWrite extends AppCompatActivity {
            /* } else {
                 wat = new WriteAsyncTask();
                 Log.i("imageFilePath", "============2" + imageFilePath);
-                wat.execute(title1.getText().toString(), content1.getText().toString());
+                wat.e   xecute(title1.getText().toString(), content1.getText().toString());
             }*/
         }
     }
@@ -194,6 +203,10 @@ public class BoardWrite extends AppCompatActivity {
         @Override
         protected String doInBackground(String... URI) {
 
+
+            SharedPreferences userPref = getSharedPreferences("userPref", Activity.MODE_PRIVATE);
+            String buf = userPref.getString("email","");
+            Log.d("111111111","==========="+buf);
             if(imageFilePath!=null) {
                 String imgPath = imageFilePath.toString();
                 imgFile = new File(imgPath);
@@ -217,6 +230,7 @@ public class BoardWrite extends AppCompatActivity {
                         fis = new FileInputStream(imgFile);
                     }
 
+
                     url = new URL(sendUrl);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setUseCaches(false); // 캐쉬 사용 안함.
@@ -238,8 +252,11 @@ public class BoardWrite extends AppCompatActivity {
                     dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
                     dos.writeBytes("Content-Disposition: form-data; name=\"content\"\r\n\r\n" + URLEncoder.encode(content1.getText().toString(), "UTF-8") + lindEnd);
                     dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
-                    dos.writeBytes("Content-Disposition: form-data; name=\"id1\"\r\n\r\n" + URLEncoder.encode("1", "UTF-8") + lindEnd);
-
+                    dos.writeBytes("Content-Disposition: form-data; name=\"id\"\r\n\r\n" + URLEncoder.encode(buf, "UTF-8") + lindEnd);
+//                    dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
+//                    dos.writeBytes("Content-Disposition: form-data; name=\"p_price2\"\r\n\r\n" + p_price2.getText().toString() + lindEnd);
+//                    dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
+//                    dos.writeBytes("Content-Disposition: form-data; name=\"p_content\"\r\n\r\n" + URLEncoder.encode(p_content.getText().toString(), "UTF-8") + lindEnd);
                     if(imageFilePath!=null) {
                         dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
                         dos.writeBytes("Content-Disposition: form-data; name=\"imageView\";filename=\"" + imageFilePath.toString().trim() + "\"" + lindEnd);
@@ -253,9 +270,9 @@ public class BoardWrite extends AppCompatActivity {
                         dos.write(buffer, 0, length);
 
                     }
-                        // 여기서 전송 끝 -> 컨트롤러로 감
-                        dos.writeBytes(lindEnd);
-                    }
+
+                    // 여기서 전송 끝 -> 컨트롤러로 감
+                    dos.writeBytes(lindEnd);}
                     dos.writeBytes(twoHyphens + boundary + twoHyphens + lindEnd);
 
                     if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
@@ -288,6 +305,7 @@ public class BoardWrite extends AppCompatActivity {
                 Toast.makeText(BoardWrite.this, "등록실패", Toast.LENGTH_SHORT).show();
 
             }
+
         }
     }
 
@@ -308,7 +326,7 @@ public class BoardWrite extends AppCompatActivity {
 //            String send, receive = null;
 //            try {
 //                String str;
-//                URL url = new URL("http://192.168.0.14:8081/hanulshop/androidwrite.hanul");
+//                URL url = new URL("http://192.168.0.23:8081/hanulshop/androidwrite.hanul");
 //                HttpURLConnection urlConnection;
 //                urlConnection = (HttpURLConnection) url.openConnection(); // URL을 연결한 객체 생성
 //                urlConnection.setRequestMethod("GET"); // GET방식 통신
@@ -452,7 +470,9 @@ public class BoardWrite extends AppCompatActivity {
     }
 
     private void takePhoto(String photo) {
+
         if (photo.equals("camera")) {
+
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
                 photoFile = null;
@@ -479,6 +499,8 @@ public class BoardWrite extends AppCompatActivity {
 //            mua = new MemberUpdateAsync();
 //            mua.execute(imageFilePath.toString());
             Toast.makeText(getApplicationContext(), "사진 파일 선택", Toast.LENGTH_SHORT).show();
+
+
         }
     }
 
@@ -498,4 +520,5 @@ public class BoardWrite extends AppCompatActivity {
         Log.i("imageFilePath", "==========" + imageFilePath);
         return image;
     }
+
 }

@@ -53,9 +53,11 @@ import java.util.Date;
 
 public class Mypage extends AppCompatActivity {
 
+
     private static final int REQUEST_IMAGE_CAPTURE = 672;
     private String imageFilePath = null;
     private Uri photoUri;
+    //com.example.skyobserver.member.Mypage.userUpdateWriteAsync pwa;
     userUpdateWriteAsync pwa;
     File photoFile;
     URL url;
@@ -70,7 +72,7 @@ public class Mypage extends AppCompatActivity {
 
     Button xbtn;
 
-    String sendUrl = Common.SERVER_URL + "/mypage.ob";
+    String sendUrl = Common.SERVER_URL + "/mypage.hanul";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -230,16 +232,16 @@ public class Mypage extends AppCompatActivity {
         protected void onPostExecute(String http_result_ok) {
             Log.d("result_ok====> ", http_result_ok);
             if (http_result_ok.equals("200")) {
-                Toast.makeText(Mypage.this, "등록 성공", Toast.LENGTH_SHORT).show();
+                Toast.makeText(com.example.skyobserver.member.Mypage.this, "등록 성공", Toast.LENGTH_SHORT).show();
 
-                Log.d("Mypage","profileUpdate ==> "+imageFilePath.toString());
+                Log.d("Mypage", "profileUpdate ==> " + imageFilePath.toString());
                 SharedPreferences userPref = getSharedPreferences("userPref", Activity.MODE_PRIVATE);
                 SharedPreferences.Editor editor = userPref.edit();
-                editor.putString("filename",imageFilePath.toString());
+                editor.putString("filename", imageFilePath.toString());
 
                 finish();
             } else {
-                Toast.makeText(Mypage.this, "등록 실패", Toast.LENGTH_SHORT).show();
+                Toast.makeText(com.example.skyobserver.member.Mypage.this, "등록 실패", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -328,7 +330,7 @@ public class Mypage extends AppCompatActivity {
 
                 }
             } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(Mypage.this, "사진 선택 취소", Toast.LENGTH_SHORT).show();
+                Toast.makeText(com.example.skyobserver.member.Mypage.this, "사진 선택 취소", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -336,19 +338,19 @@ public class Mypage extends AppCompatActivity {
     protected void restoreState() {
         SharedPreferences userPref = getSharedPreferences("userPref", Activity.MODE_PRIVATE);
 
-        Log.d("mypage","restoreState : "+ userPref.getAll().values().toString());
+        Log.d("mypage", "restoreState : " + userPref.getAll().values().toString());
         if (userPref.getAll().values().toString().length() > 2) {
             // 필요한 형식을 가져오가너 getAll로 모든 값을 사용.
 
-            Log.d("mypage","restore : "+ userPref.getAll().values().toString());
-            String filename = userPref.getString("filename","");
+            Log.d("mypage", "restore : " + userPref.getAll().values().toString());
+            String filename = userPref.getString("filename", "");
 
             email.setText(userPref.getString("email", ""));
             pwd.setText(userPref.getString("pwd", ""));
             nickName.setText(userPref.getString("name", ""));
 
 
-            this.imageView=findViewById(R.id.imageView);
+            this.imageView = findViewById(R.id.imageView);
 
             //Glide.with(this).load(filename)).into(imageView);
             Glide.with(this).load(filename).into(this.imageView);
@@ -380,7 +382,7 @@ public class Mypage extends AppCompatActivity {
             takePhoto("gallery");
         } else if (v.getId() == R.id.updateMypagebutton) {
 
-            pwa = new userUpdateWriteAsync();
+            pwa = new com.example.skyobserver.member.Mypage.userUpdateWriteAsync();
             pwa.execute();
         }
     }
@@ -400,7 +402,7 @@ public class Mypage extends AppCompatActivity {
                 // photoUri는 createImageFile() 만들어진 File 객체에서 취득
                 if (photoFile != null) {
                     // FileProvider는 AndroidManifest에서 추가했던 <Provider>요소를 이용해 uri를 불러오는 역할
-                    photoUri = FileProvider.getUriForFile(Mypage.this, getPackageName(), photoFile);
+                    photoUri = FileProvider.getUriForFile(com.example.skyobserver.member.Mypage.this, getPackageName(), photoFile);
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
@@ -431,5 +433,5 @@ public class Mypage extends AppCompatActivity {
         Log.i("imageFilePath", "==========" + imageFilePath);
         return image;
     }
-}
 
+}

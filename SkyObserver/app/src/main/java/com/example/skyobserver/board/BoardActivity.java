@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.example.skyobserver.Common;
 import com.example.skyobserver.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -126,8 +127,7 @@ public class BoardActivity extends AppCompatActivity {
         @Override
         protected ArrayList<BoardDTO> doInBackground(String... strings) {
 
-            String url = "http://192.168.0.14:8081/hanulshop/AndroidProductJsonAction.hanul";
-
+            String url = Common.SERVER_URL+"/AndroidProductJsonAction.hanul";
             try {
 
 
@@ -153,9 +153,11 @@ public class BoardActivity extends AppCompatActivity {
                     String re_level = json9.getString("RE_LEVEL");
                     String filename = json9.getString("FILENAME");
                     String id = json9.getString("ID");
+                    String name = json9.getString("name");
+                    String email = json9.getString("email");
 
 
-                    BoardDTO boardDTO = new BoardDTO(articleno, subject, content, passwd, reg_date, readcount, ref, re_step, re_level, filename, id);
+                    BoardDTO boardDTO = new BoardDTO(articleno, subject, content, passwd, reg_date, readcount, ref, re_step, re_level, filename, id,name,email);
                     this.data.add(boardDTO);
                 }
             } catch (Exception e) {
@@ -262,14 +264,20 @@ public class BoardActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
             if (requestCode == REQUEST_CODE_RESTART && resultCode == RESULT_OK){
-                Toast.makeText(this, "123123123", Toast.LENGTH_SHORT).show();
-                refreshCastAdapter();
-                try {
-                    new BoadList().execute();
-                } catch (Exception e) {
-                    e.printStackTrace();}
-
+               reload();
         }
 
     }
+
+    public void reload(){
+        refreshCastAdapter();
+        try {
+            new BoadList().execute();
+        } catch (Exception e) {
+            e.printStackTrace();}
+
+    }
+
+
+
 }

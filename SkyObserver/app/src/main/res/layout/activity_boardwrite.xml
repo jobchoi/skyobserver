@@ -90,7 +90,8 @@
                     android:drawableTop="@android:drawable/ic_menu_camera"
                     android:onClick="onClick"
                     android:padding="10dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    />
 
                 <Button
                     android:id="@+id/gallerybtn"

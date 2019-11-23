@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -53,7 +52,6 @@ public class Login extends AppCompatActivity {
     EditText pwd;
     public static MemberDTO sDto = new MemberDTO();
 
-    ImageView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,19 +99,21 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(flag == true && !(pwd.getText().toString().isEmpty())){
-                    //String url = Common.SERVER_URL+"/signinand.hanul";  // main
-                    String url = Common.SERVER_URL + "/signinand.ob";  // local
+                   String url = Common.SERVER_URL+"/signinand.ob";  // main
+                   // String url = Common.SERVER_URL + "/signinand.ob";  // local
 
                     // DBUG
                     Log.i("sendData-url", url);
                     new SendSignDataTask(Login.this).execute();
                     Toast.makeText(Login.this, "전송버튼 클릭", Toast.LENGTH_SHORT).show();
-
                 } else {
                     Toast.makeText(Login.this, "빠진항목을 채워주세요.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+
+
 
         // ---------------- Sign up 버튼 내용 구현----------------
         // 클릭 이벤트시 Listener에서 signup intent로 전환되는 작업을 메스드에서 처리 - 아래에 구현
@@ -128,8 +128,6 @@ public class Login extends AppCompatActivity {
                 }*/
             }
         });
-
-
     }
 
     @Override
@@ -218,13 +216,16 @@ public class Login extends AppCompatActivity {
 
                         JSONObject json = jArr.getJSONObject(0);
 
-                        sDto = new MemberDTO();
+                        MemberDTO sDto = new MemberDTO();
                         sDto.setEmail(json.getString("email"));
                         sDto.setName(json.getString("name"));
                         sDto.setPwd(json.getString("pwd"));
                         sDto.setFilename(json.getString("filename"));
 
-                        Log.i("Json_CHK: ", sDto.toString());
+                        Log.d("Json_CHK: ",
+                                "GetName : "+ sDto.getName() +
+                                      "  GetEmail : " + sDto.getEmail() +
+                                      "  GetPwd: " + sDto.getPwd());
 
                         //Log.d("RESPONSE확인-1 :",entity.toString());                // 즉 변수에 저장 -> 저장된 변수를 사용하는 식으로 해야됨.
 
@@ -256,7 +257,7 @@ public class Login extends AppCompatActivity {
         if(sDto.getName().equals("null")){
             sDto.setName("별명을 작성해주세요.");
 
-           // Toast.makeText(this, "1111", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this, "1111", Toast.LENGTH_SHORT).show();
 
         }
         editor.putString("name", sDto.getName());
@@ -264,9 +265,8 @@ public class Login extends AppCompatActivity {
 
         editor.putString("pwd", sDto.getPwd());
         editor.putString("email",sDto.getEmail());
-        editor.putString("filename", sDto.getFilename());
-
-        Log.d("editor-DTO확인 : ", sDto.toString());
+        editor.putString("filename",sDto.getFilename());
+        Log.d("!editor! : ", getSharedPreferences("userPref", Activity.MODE_PRIVATE).getString("email", ""));
 
 
         editor.commit();
