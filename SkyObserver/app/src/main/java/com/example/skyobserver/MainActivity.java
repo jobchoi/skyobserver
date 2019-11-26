@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -61,13 +62,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final int REQUEST_CODE_BOARD = 102;
     private boolean signupActivityLock = false;
     public static final int REQUEST_CODE_PERMISSIONS = 1009;
-
+    public static final int REQUEST_CODE_MYPAGE = 8001;
 
     public static ArrayList<MStation> mStion = new ArrayList<>();
 
     ImageView profile;
-    ImageView imageView;
 
+    ImageView imageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -202,11 +203,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return false;
             }
         });
+    }
 
-
-
-
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE_MYPAGE && resultCode == RESULT_OK){
+            restoreState();
+        }
     }
 
 
@@ -383,7 +387,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (signupActivityLock) {
 //                Toast.makeText(this, "로그인:OK, Intent 동작 ", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, Mypage.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_MYPAGE);
             } else {
                 // 로그인 하지 않은 상태면 비활성화
 //                Toast.makeText(this, "로그인:NG, Intent 비동작 ", Toast.LENGTH_SHORT).show();
