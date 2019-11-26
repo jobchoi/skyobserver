@@ -50,7 +50,8 @@ public class Signup extends AppCompatActivity {
 
     String strPwd ;
     String strRePwd;
-    String sendUrl = Common.SERVER_URL+"/signupactionand.hanul";
+    //String sendUrl = Common.SERVER_URL+"/signupactionand.hanul";
+    String sendUrl = Common.SERVER_URL+"/signupactionand.ob";
 
 
     String regExpn = "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"

@@ -2,6 +2,7 @@ package com.example.skyobserver.member;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -37,7 +38,12 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
 import com.example.skyobserver.Common;
+import com.example.skyobserver.MainActivity;
 import com.example.skyobserver.R;
+
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -51,6 +57,8 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.example.skyobserver.MainActivity.REQUEST_CODE_MYPAGE;
+
 public class Mypage extends AppCompatActivity {
 
 
@@ -62,7 +70,7 @@ public class Mypage extends AppCompatActivity {
     File photoFile;
     URL url;
     File imgFile;
-    private static final int REQUEST_CODE = 0;
+    private static final int REQUEST_CODE = 4444;
     private final int REQUEST_CODE_PERMISSIONS = 1001;
 
     EditText pwd;
@@ -70,9 +78,12 @@ public class Mypage extends AppCompatActivity {
     EditText nickName;
     ImageView imageView;
 
+    SharedPreferences userPref;
+    SharedPreferences.Editor editor;
     Button xbtn;
 
-    String sendUrl = Common.SERVER_URL + "/mypage.hanul";
+    //String sendUrl = Common.SERVER_URL + "/mypage.hanul";
+    String sendUrl = Common.SERVER_URL + "/mypage.ob";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +143,7 @@ public class Mypage extends AppCompatActivity {
                 String imgPath = imageFilePath.toString();
                 imgFile = new File(imgPath);
             }
+            Log.d("마이어싱크","imageFilePath : "+imageFilePath);
 
             // multipart/form-data 타입으로 전송시 각각의 변수마다 들어가게 되는 문자열(twoHyphens, boundary) 이게 없으면 전송 안됨.
             String twoHyphens = "--";
@@ -143,8 +155,10 @@ public class Mypage extends AppCompatActivity {
 
             String http_result_ok = "fail";
 
+
             try {
                 FileInputStream fis = null;
+
                 if (imageFilePath != null) {
                     fis = new FileInputStream(imgFile);
                 }
@@ -174,9 +188,19 @@ public class Mypage extends AppCompatActivity {
                 dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
                 dos.writeBytes("Content-Disposition: form-data; name=\"id1\"\r\n\r\n" + URLEncoder.encode("1", "UTF-8") + lindEnd);
 
+                userPref = getSharedPreferences("userPref", Activity.MODE_PRIVATE);
+                String filename =  userPref.getString("filename","");
+                String filenameChk = filename.substring(filename.lastIndexOf("/")+1);
+
                 if (imageFilePath != null) {
                     dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
                     dos.writeBytes("Content-Disposition: form-data; name=\"imageView\";filename=\"" + imageFilePath.toString().trim() + "\"" + lindEnd);
+                }
+                if( imageFilePath == null && !filenameChk.equals("null")){
+                    Log.d("333333333",userPref.getString("filename",""));
+
+                    dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
+                    dos.writeBytes("Content-Disposition: form-data; name=\"filename\"\r\n\r\n" + filenameChk + lindEnd);
                 }
                 dos.writeBytes(lindEnd);
 
@@ -198,7 +222,6 @@ public class Mypage extends AppCompatActivity {
 
                 if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     http_result_ok = "200";
-                    String filename;
 
                     Log.i("서버통신", "성공");
 
@@ -209,8 +232,26 @@ public class Mypage extends AppCompatActivity {
                             getServerRespon.write(buf, 0, len);
                         }
 
-                        System.out.println("return to Server" + new String(getServerRespon.toByteArray(), "UTF-8"));
 
+                        String returnServer = new String(getServerRespon.toByteArray(), "UTF-8");
+
+                        JSONObject json2 = new JSONObject(returnServer);
+                        JSONArray jArr = json2.getJSONArray("mypage");
+                        JSONObject json = jArr.getJSONObject(0);
+
+                        MemberDTO sDto = new MemberDTO();
+//                        sDto.setEmail(json.getString("email"));
+                        sDto.setPwd(json.getString("pwd"));
+                        sDto.setName(json.getString("name"));
+                        sDto.setFilename(json.getString("filename"));
+
+                        editor = userPref.edit();
+                        editor.putString("filename", sDto.getFilename());
+                        editor.putString("nickname",sDto.getName());
+                        editor.putString("pwd",sDto.getPwd());
+                        editor.commit();
+                        Thread.sleep(2000);
+                        Log.i("서버응답" ,"결과 : "+ new String(getServerRespon.toByteArray(), "UTF-8"));
                     }
 
                 } else {
@@ -232,12 +273,17 @@ public class Mypage extends AppCompatActivity {
         protected void onPostExecute(String http_result_ok) {
             Log.d("result_ok====> ", http_result_ok);
             if (http_result_ok.equals("200")) {
-                Toast.makeText(com.example.skyobserver.member.Mypage.this, "등록 성공", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(com.example.skyobserver.member.Mypage.this, "등록 성공", Toast.LENGTH_SHORT).show();
+//                SharedPreferences userPref = getSharedPreferences("userPref", Activity.MODE_PRIVATE);
+//                SharedPreferences.Editor editor = userPref.edit();
+//                editor.putString("filename", imageFilePath.toString());
+//                Log.d("Mypage", "profileUpdate ==> " + imageFilePath.toString());
 
-                Log.d("Mypage", "profileUpdate ==> " + imageFilePath.toString());
-                SharedPreferences userPref = getSharedPreferences("userPref", Activity.MODE_PRIVATE);
-                SharedPreferences.Editor editor = userPref.edit();
-                editor.putString("filename", imageFilePath.toString());
+                Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
+
+                userPref = getSharedPreferences("userPref", Activity.MODE_PRIVATE);
+                Log.i("쉐어드", userPref.getAll().toString());
 
                 finish();
             } else {
@@ -245,6 +291,8 @@ public class Mypage extends AppCompatActivity {
             }
         }
     }
+
+
 
     /*
      *  이미지 파일을 생성 : 이미지가 저장된 파일을 만드는게 아니라 이미지가 저장될 파일을 만드는 기능
@@ -322,7 +370,7 @@ public class Mypage extends AppCompatActivity {
                     in.close();
 
                     ((ImageView) findViewById(R.id.imageView)).setImageBitmap(img);
-                    xbtn = findViewById(R.id.xbtn);
+                    xbtn = findViewById(R.id.mypage_xbtn);
                     xbtn.setVisibility(View.VISIBLE);
                     imageFilePath = getRealPathFromURI(data.getData());
 
@@ -347,12 +395,10 @@ public class Mypage extends AppCompatActivity {
 
             email.setText(userPref.getString("email", ""));
             pwd.setText(userPref.getString("pwd", ""));
-            nickName.setText(userPref.getString("name", ""));
-
+            nickName.setText(userPref.getString("nickname", ""));
 
             this.imageView = findViewById(R.id.imageView);
 
-            //Glide.with(this).load(filename)).into(imageView);
             Glide.with(this).load(filename).into(this.imageView);
         }
     }
@@ -382,7 +428,7 @@ public class Mypage extends AppCompatActivity {
             takePhoto("gallery");
         } else if (v.getId() == R.id.updateMypagebutton) {
 
-            pwa = new com.example.skyobserver.member.Mypage.userUpdateWriteAsync();
+            pwa = new userUpdateWriteAsync();
             pwa.execute();
         }
     }
@@ -412,7 +458,8 @@ public class Mypage extends AppCompatActivity {
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_PICK);
             startActivityForResult(intent, REQUEST_CODE);
-
+//            mua = new MemberUpdateAsync();
+//            mua.execute(imageFilePath.toString());
             Toast.makeText(getApplicationContext(), "사진 파일 선택", Toast.LENGTH_SHORT).show();
         }
     }
@@ -433,5 +480,4 @@ public class Mypage extends AppCompatActivity {
         Log.i("imageFilePath", "==========" + imageFilePath);
         return image;
     }
-
 }

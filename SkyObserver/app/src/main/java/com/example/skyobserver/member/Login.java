@@ -50,7 +50,7 @@ public class Login extends AppCompatActivity {
     String resPhoneStr;
     EditText email;
     EditText pwd;
-    public static MemberDTO sDto = new MemberDTO();
+    MemberDTO sDto = new MemberDTO();
 
 
     @Override
@@ -137,7 +137,6 @@ public class Login extends AppCompatActivity {
 
     public class SendSignDataTask extends AsyncTask<Void, Void, MemberDTO> {
         Activity activity;
-
         public SendSignDataTask(Activity activity) {
             this.activity = activity;
         }
@@ -213,7 +212,6 @@ public class Login extends AppCompatActivity {
                     try {
                         JSONObject json2 = new JSONObject(resPhoneStr);
                         JSONArray jArr = json2.getJSONArray("sigininfo");
-
                         JSONObject json = jArr.getJSONObject(0);
 
                         MemberDTO sDto = new MemberDTO();

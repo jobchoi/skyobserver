@@ -105,8 +105,8 @@ public class Main_Fragment extends Fragment {
 //        //  textView.setText("asdfasdfdf");
 //
         try {
-            new MainFragment().execute("10");
-            new MainFragment().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"25");
+         //   new MainFragment().execute("10");
+          //  new MainFragment().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"25");
         } catch (Exception e) {
             e.printStackTrace();
         }
