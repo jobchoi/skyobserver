@@ -4,6 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".picam">
+    tools:context=".iot.PIcam">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="IoT : PI Cam"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
