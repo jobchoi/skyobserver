@@ -6,7 +6,6 @@
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality.
     -->
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -21,6 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".iot.PIcam"></activity>
         <activity android:name=".statistics.Region" />
         <activity
             android:name=".statistics.Statistics"
@@ -28,8 +28,7 @@
         <activity android:name=".member.Signup" />
         <activity android:name=".member.Login" />
         <activity android:name=".member.Mypage" />
-
-        <activity android:name=".board.BoardWrite"  />
+        <activity android:name=".board.BoardWrite" />
         <activity android:name=".board.BoardActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -46,7 +45,7 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".iot.IoT"/>
+        <activity android:name=".iot.IoT" />
         <activity
             android:name=".MainActivity"
             android:label="Sky Observer"
@@ -57,6 +56,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.skyobserver"
@@ -66,10 +66,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
-
-
-
     </application>
 
 </manifest>
