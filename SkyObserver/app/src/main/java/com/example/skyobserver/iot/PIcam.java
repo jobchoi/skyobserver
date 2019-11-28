@@ -28,66 +28,81 @@ public class PIcam extends AppCompatActivity {
     private WebView myWebView;
     private Button mMoveButton;
 
-        @Override
-        protected void onCreate (Bundle savedInstanceState){
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_picam);
 
-            myWebView = findViewById(R.id.web_view);
+        myWebView = findViewById(R.id.web_view);
 
-            // WebView의 설정
-            WebSettings webSettings = myWebView.getSettings();
-            webSettings.setJavaScriptEnabled(true);
+        // WebView의 설정
+        WebSettings webSettings = myWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
 
-            myWebView.setWebViewClient(new WebViewClient() {
-                @Override
-                public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                    super.onPageStarted(view, url, favicon);
-                    Toast.makeText(PIcam.this, "페이지 로딩 시작", Toast.LENGTH_SHORT).show();
+        /*myWebView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+//                Toast.makeText(MainActivity.this, "페이지 로딩 시작", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PIcam.this, "페이지 로딩 시작", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+            }
+        });
+
+        mAddressEdit = findViewById(R.id.address_edit);
+        mMoveButton = findViewById(R.id.move_button);
+
+        mAddressEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    mMoveButton.callOnClick();
+                    return true;
                 }
+                return false;
+            }
+        });
 
-                @Override
-                public void onPageFinished(WebView view, String url) {
-                    super.onPageFinished(view, url);
+        // 소프트 키보드의 돋보기를 클릭했을 때 이동 버튼을 클릭하는 효과
+        mAddressEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    mMoveButton.callOnClick();
+
+                    // 키보드 숨기기
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+                    return true;
                 }
-            });
+                return false;
+            }
+        });*/
 
-            mAddressEdit = findViewById(R.id.address_edit);
-            mMoveButton = findViewById(R.id.move_button);
-
-            mAddressEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                        mMoveButton.callOnClick();
-                        return true;
-                    }
-                    return false;
-                }
-            });
-
-            // 소프트 키보드의 돋보기를 클릭했을 때 이동 버튼을 클릭하는 효과
-            mAddressEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                        mMoveButton.callOnClick();
-
-                        // 키보드 숨기기
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-
-                        return true;
-                    }
-                    return false;
-                }
-            });
+        String address = "192.168.0.13:8083";
+        if(address.startsWith("http://") == false){
+            address = "http://" + address;
         }
+        myWebView.loadUrl(address);
+    }
 
         // 이동 버튼을 클릭했을 때의 동작을 정의
-        public void onClick (View view){
+        public void onClick(View view){
             String address = mAddressEdit.getText().toString();
             if (address.startsWith("http://") == false) {
+                address = "http://" + address;
+            }
+            myWebView.loadUrl(address);
+        }
+
+        private void viewHomeCam(View view){
+            String address = "192.168.0.13:8083";
+            if(address.startsWith("http://") == false){
                 address = "http://" + address;
             }
             myWebView.loadUrl(address);
