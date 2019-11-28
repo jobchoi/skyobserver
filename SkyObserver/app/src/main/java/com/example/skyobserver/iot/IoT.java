@@ -40,7 +40,7 @@ public class IoT extends AppCompatActivity {
         }  else if(view.getId() == R.id.iotbutton6){
             // picam
             Toast.makeText(this, "IoT button 6", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, PIcam.class);
+            Intent intent = new Intent(IoT.this, PIcam.class);
             startActivity(intent);
         }
     }

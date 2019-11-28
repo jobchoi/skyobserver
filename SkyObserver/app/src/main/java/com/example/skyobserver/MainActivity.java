@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -32,10 +33,14 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.signature.ObjectKey;
 import com.example.skyobserver.board.BoardActivity;
 import com.example.skyobserver.iot.IoT;
@@ -66,8 +71,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public static ArrayList<MStation> mStion = new ArrayList<>();
 
-    ImageView profile;
+    private String profileTest;
 
+    ImageView profile;
     ImageView imageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -266,25 +272,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
             idtextView.setText(userPref.getString("email", ""));
-            String pImge = userPref.getString("filename","");
+            final String pImge = userPref.getString("filename","");
+            profileTest = pImge;
 
             Log.d("restoreState값확인 : ",pImge);
 
+            RequestOptions requestOptions = new RequestOptions();
+            requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
+            requestOptions.skipMemoryCache(true);
+            requestOptions.signature(new ObjectKey(System.currentTimeMillis()));
+            requestOptions.transform(new CenterCrop(), new RoundedCorners(20));
 
-                          RequestOptions requestOptions = new RequestOptions();
-               requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
-               requestOptions.skipMemoryCache(true);
-               requestOptions.signature(new ObjectKey(System.currentTimeMillis()));
-               requestOptions.transform(new CenterCrop(), new RoundedCorners(20));
+            Glide.with(this)
+                        .load(pImge)
+                        .apply(requestOptions)
+                        .into(imageView);
 
+                    // Listener 사용 보류중
+                /*Glide.with(this)
+                    .load(pImge).listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {                        ;
+                        Toast.makeText(MainActivity.this, "테스트", Toast.LENGTH_SHORT).show();
+                        Glide.with( MainActivity.this)
+                        .load(pImge)
+                        .apply();
 
-                Glide.with(this)
-                    .load(pImge)
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                })
                     .apply(requestOptions)
-                    .into(imageView);
+                    .into(imageView);*/
 
             Log.d("ProfileMypage :",pImge);
-
 
             signupActivityLock = true;
         }
@@ -422,6 +447,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
 
     class MyPagerAdapter extends FragmentStatePagerAdapter {
