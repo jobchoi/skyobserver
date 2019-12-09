@@ -11,7 +11,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.skyobserver.Common;
 import com.example.skyobserver.R;
+
+import java.net.URL;
 
 public class PIcam extends AppCompatActivity {
 
@@ -24,11 +27,12 @@ public class PIcam extends AppCompatActivity {
 
         myWebView = findViewById(R.id.web_view);
 
+
         // WebView의 설정
         WebSettings webSettings = myWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
 
-        String address = "192.168.0.13:8083";
+        String address = "192.168.0.13:8083/index.html";
         if(address.startsWith("http://") == false){
             address = "http://" + address;
         }
@@ -75,4 +79,8 @@ public class PIcam extends AppCompatActivity {
             Toast.makeText(this, "btn click", Toast.LENGTH_SHORT).show();
         }
     }
+
+
+
+
 }

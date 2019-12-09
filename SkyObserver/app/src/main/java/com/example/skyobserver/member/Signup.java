@@ -148,24 +148,7 @@ public class Signup extends AppCompatActivity {
         }
     }
 
-    public class SendSignupDataTaask extends AsyncTask<String, Void, String>{
-        @Override
-        protected String doInBackground(String... email) {
-            executeSend(email);
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            Log.d("SendSignup","onPostExcute" +s);
-        }
-
-        public  String executeSend(String... email){
-            Log.d("Signup DATA ","email[0]"+email[0]);
-            return null;
-        }
-    }
 
     protected class ProductWriteAsync extends AsyncTask<String, Void, String> {     //test
 //        private class ProductWriteAsync extends AsyncTask<String, String, String> {   //  origin

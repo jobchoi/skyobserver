@@ -30,7 +30,7 @@ public class IoTServiceImpl implements IoTSevice{
 
     }
 
-    protected class ToServer extends AsyncTask<Void, Void, Void>{
-
-    }
+//    protected class ToServer extends AsyncTask<Void, Void, Void>{
+//
+//    }
 }

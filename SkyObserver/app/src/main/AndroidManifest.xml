@@ -20,7 +20,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".menu_main"></activity>
         <activity android:name=".iot.PIcam" />
         <activity android:name=".statistics.Region" />
         <activity

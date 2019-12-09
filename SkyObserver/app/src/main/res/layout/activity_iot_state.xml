@@ -43,7 +43,9 @@
             android:layout_height="150dp"
             android:layout_marginLeft="30dp"
             tools:layout_editor_absoluteX="25dp"
-            tools:layout_editor_absoluteY="88dp"/>
+            tools:layout_editor_absoluteY="88dp"
+            android:scaleType="fitXY"
+            android:background="@drawable/ledon"/>
         <ImageButton
             android:id="@+id/iotbutton2"
             android:onClick="iotState"
@@ -104,10 +106,11 @@
 
             <ImageButton
                 android:id="@+id/iotbutton5"
-                android:onClick="iotState"
-                android:layout_width="170dp"
-                android:layout_height="110dp"
+                android:layout_width="177dp"
+                android:layout_height="104dp"
                 android:layout_marginLeft="30dp"
+                android:background="@drawable/ledoff"
+                android:onClick="iotState"
                 tools:layout_editor_absoluteX="26dp"
                 tools:layout_editor_absoluteY="393dp" />
 
@@ -128,6 +131,7 @@
                 android:layout_width="170dp"
                 android:layout_height="110dp"
                 android:layout_marginLeft="10dp"
+                android:background="@drawable/cctv"
                 android:onClick="iotState"
                 tools:layout_editor_absoluteX="207dp"
                 tools:layout_editor_absoluteY="393dp" />
