@@ -64,50 +64,73 @@ public class Login extends AppCompatActivity {
 
         Button button = findViewById(R.id.serverTransmitB);
         Button signup = findViewById(R.id.signup);
-        Button sns = findViewById(R.id.sns);
+        //Button sns = findViewById(R.id.sns);
 
         email = findViewById(R.id.loginEmail);
         pwd = findViewById(R.id.loginPWD);
 
-        email.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-            if (!hasFocus) {
-                Log.d("hasFocus", "!hasFocus");
-                // 이메일 유효성 검사
-                inputStr = email.getText().toString();
-                Log.d("입력값 확인 : ", "입력 email : " + email.getText().toString() );
-
-                Pattern pattern = Pattern.compile(regExpn, Pattern.CASE_INSENSITIVE);
-                Matcher matcher = pattern.matcher(inputStr);
-                if (matcher.matches()) {
-                    Log.d("SignUp", "Email pattern OK");
-                    Toast.makeText(Login.this, "ok", Toast.LENGTH_SHORT).show();
-                    flag = true;
-                } else {
-                    Log.d("SignUp", "Email pattern NG");
-                    Toast.makeText(Login.this, "ng", Toast.LENGTH_SHORT).show();
-                    flag = false;
-                }
-            }
-            }
-        });
+//        email.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//            if (!hasFocus) {
+//                Log.d("hasFocus", "!hasFocus");
+//                // 이메일 유효성 검사
+//                inputStr = email.getText().toString();
+//                Log.d("입력값 확인 : ", "입력 email : " + email.getText().toString() );
+//
+//                Pattern pattern = Pattern.compile(regExpn, Pattern.CASE_INSENSITIVE);
+//                Matcher matcher = pattern.matcher(inputStr);
+//                if (matcher.matches()) {
+//                    Log.d("SignUp", "Email pattern OK");
+//                   // Toast.makeText(Login.this, "ok", Toast.LENGTH_SHORT).show();
+//                    flag = true;
+//                } else {
+//                    Log.d("SignUp", "Email pattern NG");
+//                    Toast.makeText(Login.this, "이메일 형식을 확인해 주세요", Toast.LENGTH_SHORT).show();
+//                    flag = false;
+//                }
+//            }
+//            }
+//        });
 
         // ---------------- signin 버튼 클릭----------------
         // flag에서 Email 유효성 체크, pwd를 입력 하였으면 서버로 전송.
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+                    Log.d("hasFocus", "!hasFocus");
+                    // 이메일 유효성 검사
+                    inputStr = email.getText().toString();
+                    Log.d("입력값 확인 : ", "입력 email : " + email.getText().toString() );
+
+                    Pattern pattern = Pattern.compile(regExpn, Pattern.CASE_INSENSITIVE);
+                    Matcher matcher = pattern.matcher(inputStr);
+                    if (matcher.matches()) {
+                        Log.d("SignUp", "Email pattern OK");
+                        // Toast.makeText(Login.this, "ok", Toast.LENGTH_SHORT).show();
+                        flag = true;
+                    } else {
+                        Log.d("SignUp", "Email pattern NG");
+                        Toast.makeText(Login.this, "이메일 형식을 확인해 주세요", Toast.LENGTH_SHORT).show();
+                        flag = false;
+                    }
+
+
                 if(flag == true && !(pwd.getText().toString().isEmpty())){
-                   String url = Common.SERVER_URL+"/signinand.ob";  // main
+                   String url = Common.SERVER_URL+"/androidlogin";  // main
                    // String url = Common.SERVER_URL + "/signinand.ob";  // local
 
                     // DBUG
                     Log.i("sendData-url", url);
                     new SendSignDataTask(Login.this).execute();
-                    Toast.makeText(Login.this, "전송버튼 클릭", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(Login.this, "빠진항목을 채워주세요.", Toast.LENGTH_SHORT).show();
+                  //  Toast.makeText(Login.this, "전송버튼 클릭", Toast.LENGTH_SHORT).show();
+                }else if(flag==false){
+                    Toast.makeText(Login.this, "이메일을 확인해 주세요", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(Login.this, "패스워드를 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -179,8 +202,8 @@ public class Login extends AppCompatActivity {
         email = findViewById(R.id.loginEmail);
         pwd = findViewById(R.id.loginPWD);
 
-        post.add(new BasicNameValuePair("EMAIL", email.getText().toString()));
-        post.add(new BasicNameValuePair("PWD", pwd.getText().toString()));
+        post.add(new BasicNameValuePair("email", email.getText().toString().trim()));
+        post.add(new BasicNameValuePair("pwd", pwd.getText().toString().trim()));
 
         // 연결 HttpClient 객체 생성
         HttpClient client = new DefaultHttpClient();
@@ -191,7 +214,7 @@ public class Login extends AppCompatActivity {
         HttpConnectionParams.setSoTimeout(params, 5000);
 
         // Post객체 생성
-        String url = Common.SERVER_URL + "/signinand.ob";
+        String url = Common.SERVER_URL + "/androidlogin";
         HttpPost httpPost = new HttpPost(url);
 
         try {
@@ -202,7 +225,11 @@ public class Login extends AppCompatActivity {
 
             if (resEntity != null) {
                 // 서버로부터 리턴값 확인인
-                resPhoneStr = EntityUtils.toString(resEntity);
+
+                String result = EntityUtils.toString(resEntity);
+                JSONObject js=new JSONObject(result) ;
+
+                resPhoneStr=js.getString("login_info");
 
                 if (resPhoneStr.equals("NG")) {
                     Log.d("RESPONSE_확인(NG) :", resPhoneStr);        //  EntityUtils.toString(resEntity) 를 Log.d에서 확인후 다시 JSon에서 사용할시 Error가 발생 -> Log.d에서 확인후 통신대기 또는 버퍼가 클리어되는 상황인듯
@@ -210,15 +237,17 @@ public class Login extends AppCompatActivity {
                 } else {
                     Log.d("RESPONSE_확인(OK) :", resPhoneStr);
                     try {
-                        JSONObject json2 = new JSONObject(resPhoneStr);
-                        JSONArray jArr = json2.getJSONArray("sigininfo");
-                        JSONObject json = jArr.getJSONObject(0);
+                        JSONObject json = new JSONObject(resPhoneStr);
+//                        JSONArray jArr = json2.getJSONArray("login_info");
+//                        JSONObject json = jArr.getJSONObject(0);
 
                         MemberDTO sDto = new MemberDTO();
                         sDto.setEmail(json.getString("email"));
-                        sDto.setName(json.getString("name"));
+                        sDto.setName(json.getString("nickname"));
                         sDto.setPwd(json.getString("pwd"));
                         sDto.setFilename(json.getString("filename"));
+                        sDto.setFilepath(json.getString("filepath"));
+                        sDto.setRegioncode(json.getString("regioncode"));
 
                         Log.d("Json_CHK: ",
                                 "GetName : "+ sDto.getName() +
@@ -258,12 +287,14 @@ public class Login extends AppCompatActivity {
             // Toast.makeText(this, "1111", Toast.LENGTH_SHORT).show();
 
         }
-        editor.putString("name", sDto.getName());
+        editor.putString("nickname", sDto.getName());
         Log.d("-----Login name----",sDto.getName());
 
         editor.putString("pwd", sDto.getPwd());
         editor.putString("email",sDto.getEmail());
         editor.putString("filename",sDto.getFilename());
+        editor.putString("filepath",sDto.getFilepath());
+        editor.putString("regioncode",sDto.getRegioncode());
         Log.d("!editor! : ", getSharedPreferences("userPref", Activity.MODE_PRIVATE).getString("email", ""));
 
 

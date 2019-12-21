@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".iot.IoT">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.008"
+        tools:layout_editor_absoluteX="-16dp">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="IoT Actvity"
+            android:textAlignment="center"
+            android:textSize="20dp"
+            tools:layout_editor_absoluteX="-16dp"
+            tools:layout_editor_absoluteY="6dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="413dp"
+        android:layout_height="158dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        android:orientation="horizontal"
+        app:layout_constraintVertical_bias="0.002">
+
+        <ImageButton
+            android:layout_width="170dp"
+            android:layout_height="150dp"
+            android:layout_marginLeft="30dp"
+            tools:layout_editor_absoluteX="25dp"
+            tools:layout_editor_absoluteY="88dp"
+            android:id="@+id/iotbutton1"/>
+        <ImageButton
+            android:layout_width="170dp"
+            android:layout_height="150dp"
+            android:layout_marginLeft="10sp"
+            tools:layout_editor_absoluteX="25dp"
+            tools:layout_editor_absoluteY="88dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="413dp"
+        android:layout_height="158dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="0.306">
+
+        <ImageButton
+            android:layout_width="170dp"
+            android:layout_height="150dp"
+            android:layout_marginLeft="25dp"
+            tools:layout_editor_absoluteX="25dp"
+            tools:layout_editor_absoluteY="88dp" />
+
+        <ImageButton
+            android:layout_width="170dp"
+            android:layout_height="150dp"
+            android:layout_marginLeft="10sp"
+            tools:layout_editor_absoluteX="25dp"
+            tools:layout_editor_absoluteY="88dp" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

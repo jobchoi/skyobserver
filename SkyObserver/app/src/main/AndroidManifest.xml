@@ -6,6 +6,8 @@
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality.
     -->
+    <uses-feature android:name="android.hardware.camera" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -15,21 +17,31 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="Fine Air"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".iot.PIcam" />
+        <activity android:name=".iot.cctv"></activity>
+        <activity
+            android:name=".Intro"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".statistics.Region" />
         <activity
             android:name=".statistics.Statistics"
-            android:label="미세먼지 통계" />
+            android:label="통계" />
         <activity android:name=".member.Signup" />
         <activity android:name=".member.Login" />
         <activity android:name=".member.Mypage" />
         <activity android:name=".board.BoardWrite" />
         <activity android:name=".board.BoardActivity" />
+        <activity android:name=".notics.NoticeActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -49,13 +61,7 @@
         <activity
             android:name=".MainActivity"
             android:label="Sky Observer"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"

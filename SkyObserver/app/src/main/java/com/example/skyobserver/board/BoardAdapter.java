@@ -22,6 +22,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
+import com.example.skyobserver.Common;
 import com.example.skyobserver.R;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> 
         final BoardDTO item=items.get(position);
     holder.setItem(item);
 
-    if(item.getFILENAME()!=null){
+    if(!item.getFilename().equals("null")){
         requestManager.clear(holder.cardImg);
 
         RequestOptions requestOptions = new RequestOptions();
@@ -63,10 +64,10 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> 
 
 
         requestManager
-                .load(item.getFILENAME())
+                .load(Common.SERVER_URL+item.getFilepath())
                 .apply(requestOptions)
                 .into(holder.cardImg);}
-        Log.d("process","============="+item.getFILENAME());
+        Log.d("process","============="+item.getFilename());
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -137,9 +138,9 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> 
 
         public void setItem(BoardDTO item) {
 
-            boardTitle.setText(item.getSUBJECT());
-            boardId.setText(item.getName());
-            content.setText(item.getCONTENT());
+            boardTitle.setText(item.getSubject());
+            boardId.setText(item.getNickName());
+            content.setText(item.getContent());
 
 
 

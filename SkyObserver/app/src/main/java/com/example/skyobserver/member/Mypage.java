@@ -2,7 +2,7 @@ package com.example.skyobserver.member;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -40,9 +40,8 @@ import com.bumptech.glide.signature.ObjectKey;
 import com.example.skyobserver.Common;
 import com.example.skyobserver.MainActivity;
 import com.example.skyobserver.R;
+import com.example.skyobserver.msmap.RegiongpsDTO;
 
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -55,46 +54,47 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-
-import static com.example.skyobserver.MainActivity.REQUEST_CODE_MYPAGE;
 
 public class Mypage extends AppCompatActivity {
 
 
-    private static final int REQUEST_IMAGE_CAPTURE = 672;
     private String imageFilePath = null;
     private Uri photoUri;
-    //com.example.skyobserver.member.Mypage.userUpdateWriteAsync pwa;
     userUpdateWriteAsync pwa;
     File photoFile;
     URL url;
     File imgFile;
-    private static final int REQUEST_CODE = 4444;
-    private final int REQUEST_CODE_PERMISSIONS = 1001;
-
+    private static final int GALLERY_CODE = 4444;
+    private static final int CROP_GALLERY_CODE = 4447;
+    private static final int CAMERA_CODE = 672;
+    private static final int CROP_CAMERA_CODE = 6738;
+    private static final int PERMISSIONS_CODE_REQUEST = 1001;
+    TextView rc;
     EditText pwd;
     TextView email;
     EditText nickName;
     ImageView imageView;
-
+    EditText sr ;
     SharedPreferences userPref;
     SharedPreferences.Editor editor;
     Button xbtn;
 
     //String sendUrl = Common.SERVER_URL + "/mypage.hanul";
-    String sendUrl = Common.SERVER_URL + "/mypage.ob";
+    String sendUrl = Common.SERVER_URL + "/mypageupdate";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mypage);
-
+        rc = findViewById(R.id.regioncode);
+        sr = findViewById(R.id.selectRegion);
         pwd = findViewById(R.id.pwd_my);
         email = findViewById(R.id.mypage_email);
         nickName = findViewById(R.id.mypage_nickName);
         xbtn = findViewById(R.id.mypage_xbtn);
-
+        imageView = findViewById(R.id.mypageimg);
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) !=
                 PackageManager.PERMISSION_GRANTED
@@ -104,7 +104,7 @@ public class Mypage extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
                             Manifest.permission.CAMERA},
-                    REQUEST_CODE_PERMISSIONS);
+                    PERMISSIONS_CODE_REQUEST);
             return;
         }
 
@@ -112,12 +112,26 @@ public class Mypage extends AppCompatActivity {
         canclebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "등록 취소", Toast.LENGTH_LONG).show();
+               // Toast.makeText(getApplicationContext(), "등록 취소", Toast.LENGTH_LONG).show();
                 finish();
             }
         });
 
         restoreState();
+
+        Button mypageregion = findViewById(R.id.mypageregion);
+
+        mypageregion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                RegionSelDialog bDialog = new RegionSelDialog(Mypage.this, Mypage.this);
+
+                bDialog.popBoard();
+
+            }
+        });
+
 
         xbtn = findViewById(R.id.mypage_xbtn);
         xbtn.setOnTouchListener(new View.OnTouchListener() {
@@ -125,7 +139,13 @@ public class Mypage extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 if (imageFilePath != null) {
                     imageFilePath.isEmpty();
-                    imageView.setImageResource(android.R.drawable.picture_frame);
+                    userPref = getSharedPreferences("userPref", Activity.MODE_PRIVATE);
+                    if (!userPref.getString("filename", "").equals("")) {
+                        String filename = userPref.getString("filepath", "");
+                        Glide.with(Mypage.this).load(Common.SERVER_URL + filename).into(imageView);
+                    } else {
+                        imageView.setImageResource(R.drawable.logo);
+                    }
 
                     xbtn.setVisibility(View.GONE);
                 }
@@ -136,6 +156,14 @@ public class Mypage extends AppCompatActivity {
 
     private class userUpdateWriteAsync extends AsyncTask<String, String, String> {
 
+        ProgressDialog progressDialog;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(Mypage.this, "MY Info", "데이터 저장중");
+        }
+
         @Override
         protected String doInBackground(String... URI) {
 
@@ -143,7 +171,7 @@ public class Mypage extends AppCompatActivity {
                 String imgPath = imageFilePath.toString();
                 imgFile = new File(imgPath);
             }
-            Log.d("마이어싱크","imageFilePath : "+imageFilePath);
+            Log.d("마이어싱크", "imageFilePath : " + imageFilePath);
 
             // multipart/form-data 타입으로 전송시 각각의 변수마다 들어가게 되는 문자열(twoHyphens, boundary) 이게 없으면 전송 안됨.
             String twoHyphens = "--";
@@ -182,25 +210,27 @@ public class Mypage extends AppCompatActivity {
                 dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
                 dos.writeBytes("Content-Disposition: form-data; name=\"nickname\"\r\n\r\n" + URLEncoder.encode(nickName.getText().toString(), "UTF-8") + lindEnd);
                 dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
-                dos.writeBytes("Content-Disposition: form-data; name=\"email\"\r\n\r\n" + URLEncoder.encode(email.getText().toString(), "UTF-8") + lindEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"email\"\r\n\r\n" + email.getText().toString() + lindEnd);
                 dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
-                dos.writeBytes("Content-Disposition: form-data; name=\"pwd\"\r\n\r\n" + URLEncoder.encode(pwd.getText().toString(), "UTF-8") + lindEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"pwd\"\r\n\r\n" + pwd.getText().toString() + lindEnd);
                 dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
-                dos.writeBytes("Content-Disposition: form-data; name=\"id1\"\r\n\r\n" + URLEncoder.encode("1", "UTF-8") + lindEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"regioncode\"\r\n\r\n" + rc.getText().toString() + lindEnd);
+                dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
+                dos.writeBytes("Content-Disposition: form-data; name=\"address\"\r\n\r\n" + URLEncoder.encode("지역", "UTF-8") + lindEnd);
 
                 userPref = getSharedPreferences("userPref", Activity.MODE_PRIVATE);
-                String filename =  userPref.getString("filename","");
-                String filenameChk = filename.substring(filename.lastIndexOf("/")+1);
+                String filename = userPref.getString("filename", "");
+                //String filenameChk = filename.substring(filename.lastIndexOf("/")+1);
 
                 if (imageFilePath != null) {
                     dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
                     dos.writeBytes("Content-Disposition: form-data; name=\"imageView\";filename=\"" + imageFilePath.toString().trim() + "\"" + lindEnd);
                 }
-                if( imageFilePath == null && !filenameChk.equals("null")){
-                    Log.d("333333333",userPref.getString("filename",""));
+                if (imageFilePath == null && !filename.equals("null")) {
+                    Log.d("333333333", userPref.getString("filename", ""));
 
                     dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
-                    dos.writeBytes("Content-Disposition: form-data; name=\"filename\"\r\n\r\n" + filenameChk + lindEnd);
+                    dos.writeBytes("Content-Disposition: form-data; name=\"filename\"\r\n\r\n" + filename + lindEnd);
                 }
                 dos.writeBytes(lindEnd);
 
@@ -225,34 +255,40 @@ public class Mypage extends AppCompatActivity {
 
                     Log.i("서버통신", "성공");
 
-                    try (InputStream in = conn.getInputStream(); ByteArrayOutputStream getServerRespon = new ByteArrayOutputStream()) {
-                        byte[] buf = new byte[1024 * 8];
-                        int len = 0;
-                        while ((len = in.read(buf)) != -1) {
-                            getServerRespon.write(buf, 0, len);
-                        }
-
-
-                        String returnServer = new String(getServerRespon.toByteArray(), "UTF-8");
-
-                        JSONObject json2 = new JSONObject(returnServer);
-                        JSONArray jArr = json2.getJSONArray("mypage");
-                        JSONObject json = jArr.getJSONObject(0);
-
-                        MemberDTO sDto = new MemberDTO();
-//                        sDto.setEmail(json.getString("email"));
-                        sDto.setPwd(json.getString("pwd"));
-                        sDto.setName(json.getString("name"));
-                        sDto.setFilename(json.getString("filename"));
-
-                        editor = userPref.edit();
-                        editor.putString("filename", sDto.getFilename());
-                        editor.putString("nickname",sDto.getName());
-                        editor.putString("pwd",sDto.getPwd());
-                        editor.commit();
-                        Thread.sleep(2000);
-                        Log.i("서버응답" ,"결과 : "+ new String(getServerRespon.toByteArray(), "UTF-8"));
+                    InputStream in = conn.getInputStream();
+                    ByteArrayOutputStream getServerRespon = new ByteArrayOutputStream();
+                    byte[] buf = new byte[1024 * 8];
+                    int len = 0;
+                    while ((len = in.read(buf)) != -1) {
+                        getServerRespon.write(buf, 0, len);
                     }
+
+
+                    String returnServer = new String(getServerRespon.toByteArray(), "UTF-8");
+
+                    JSONObject json2 = new JSONObject(returnServer);
+                    JSONObject json = new JSONObject(json2.getString("login_info"));
+                    // JSONArray jArr = json2.getJSONArray("login_info");
+                    // JSONObject json = jArr.getJSONObject(0);
+
+                    MemberDTO sDto = new MemberDTO();
+//                        sDto.setEmail(json.getString("email"));
+                    sDto.setPwd(json.getString("pwd"));
+                    sDto.setName(json.getString("nickname"));
+                    sDto.setFilename(json.getString("filename"));
+                    sDto.setFilepath(json.getString("filepath"));
+                    sDto.setRegioncode(json.getString("regioncode"));
+
+                    editor = userPref.edit();
+                    editor.putString("filename", sDto.getFilename());
+                    editor.putString("filepath", sDto.getFilepath());
+                    editor.putString("nickname", sDto.getName());
+                    editor.putString("pwd", sDto.getPwd());
+                    editor.putString("regioncode", sDto.getRegioncode());
+                    editor.commit();
+                    Thread.sleep(1000);
+                    Log.i("서버응답", "결과 : " + new String(getServerRespon.toByteArray(), "UTF-8"));
+
 
                 } else {
                     Log.i("conn.getResponseCode()", "" + conn.getResponseCode());
@@ -271,6 +307,7 @@ public class Mypage extends AppCompatActivity {
         //수정 (2019.10.16)
         @Override
         protected void onPostExecute(String http_result_ok) {
+            progressDialog.dismiss();
             Log.d("result_ok====> ", http_result_ok);
             if (http_result_ok.equals("200")) {
 //                Toast.makeText(com.example.skyobserver.member.Mypage.this, "등록 성공", Toast.LENGTH_SHORT).show();
@@ -336,7 +373,8 @@ public class Mypage extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        if (resultCode != RESULT_OK) return;
+        if (requestCode == CAMERA_CODE) {
             Bitmap bitmap = BitmapFactory.decodeFile(imageFilePath);
             ExifInterface exif = null;
 
@@ -356,29 +394,71 @@ public class Mypage extends AppCompatActivity {
                 exifDegree = 0;
             }
 
-            ((ImageView) findViewById(R.id.imageView)).setImageBitmap(rotate(bitmap, exifDegree));
+
+            Uri uri = photoUri;
+            File file = new File(String.valueOf(photoFile));
+            Uri out = Uri.fromFile(file);
+            Intent intent = getCropIntent(photoUri, out);
+            startActivityForResult(intent, CROP_CAMERA_CODE);
+
+           /* ((ImageView) findViewById(R.id.mypageimg)).setImageBitmap(rotate(bitmap, exifDegree));
             xbtn = findViewById(R.id.mypage_xbtn);
-            xbtn.setVisibility(View.VISIBLE);
+            xbtn.setVisibility(View.VISIBLE);*/
+
+        } else if (requestCode == CROP_CAMERA_CODE) {
+          /*  Bitmap bitmap = BitmapFactory.decodeFile(imageFilePath);
+             ((ImageView) findViewById(R.id.mypageimg)).setImageBitmap(bitmap);
+            xbtn = findViewById(R.id.mypage_xbtn);
+            xbtn.setVisibility(View.VISIBLE);*/
+            try {
+                InputStream in = null;
+                in = getContentResolver().openInputStream(data.getData());
+
+                Bitmap img = BitmapFactory.decodeStream(in);
+                in.close();
+
+                ((ImageView) findViewById(R.id.mypageimg)).setImageBitmap(img);
+
+                xbtn = findViewById(R.id.mypage_xbtn);
+                xbtn.setVisibility(View.VISIBLE);
+                imageFilePath = getRealPathFromURI(data.getData());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
 
-        if (requestCode == REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                try {
-                    InputStream in = getContentResolver().openInputStream(data.getData());
+        if (requestCode == GALLERY_CODE) {
 
-                    Bitmap img = BitmapFactory.decodeStream(in);
-                    in.close();
 
-                    ((ImageView) findViewById(R.id.imageView)).setImageBitmap(img);
-                    xbtn = findViewById(R.id.mypage_xbtn);
-                    xbtn.setVisibility(View.VISIBLE);
-                    imageFilePath = getRealPathFromURI(data.getData());
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
 
-                } catch (Exception e) {
+            }
+            Uri uri = data.getData();
+            File file = new File(String.valueOf(photoFile));
+            Uri out = Uri.fromFile(file);
+            Intent intent = getCropIntent(uri, out);
+            startActivityForResult(intent, CROP_GALLERY_CODE);
 
-                }
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(com.example.skyobserver.member.Mypage.this, "사진 선택 취소", Toast.LENGTH_SHORT).show();
+        } else if (requestCode == CROP_GALLERY_CODE) {
+
+
+            try {
+                InputStream in = getContentResolver().openInputStream(data.getData());
+
+                Bitmap img = BitmapFactory.decodeStream(in);
+                in.close();
+
+                ((ImageView) findViewById(R.id.mypageimg)).setImageBitmap(img);
+
+                xbtn = findViewById(R.id.mypage_xbtn);
+                xbtn.setVisibility(View.VISIBLE);
+                imageFilePath = getRealPathFromURI(data.getData());
+
+            } catch (Exception e) {
+
             }
         }
     }
@@ -386,20 +466,70 @@ public class Mypage extends AppCompatActivity {
     protected void restoreState() {
         SharedPreferences userPref = getSharedPreferences("userPref", Activity.MODE_PRIVATE);
 
-        Log.d("mypage", "restoreState : " + userPref.getAll().values().toString());
+        //Log.d("mypage", "restoreState : " + userPref.getAll().values().toString());
         if (userPref.getAll().values().toString().length() > 2) {
             // 필요한 형식을 가져오가너 getAll로 모든 값을 사용.
 
-            Log.d("mypage", "restore : " + userPref.getAll().values().toString());
-            String filename = userPref.getString("filename", "");
+       //     Log.d("mypage", "restore : " + userPref.getAll().values().toString());
 
             email.setText(userPref.getString("email", ""));
             pwd.setText(userPref.getString("pwd", ""));
             nickName.setText(userPref.getString("nickname", ""));
+            if (!userPref.getString("regioncode", "null").equals("null")) {
 
-            this.imageView = findViewById(R.id.imageView);
+                ArrayList<RegiongpsDTO> dto=MainActivity.regiongpsDTO;
+               for (int i = 0; i < dto.size(); i++) {
+                    if (userPref.getString("regioncode", "").equals(dto.get(i).getCode())) {
 
-            Glide.with(this).load(filename).into(this.imageView);
+
+                            sr.setText(dto.get(i).getSido());
+                        if (!dto.get(i).getGugun().equals("null")) {
+                            sr.append(" " + dto.get(i).getGugun());
+                        } else {
+                            sr.append("");
+                        }
+
+                        if (!dto.get(i).getDong().equals("null")) {
+                            sr.append(" " + dto.get(i).getDong());
+                        } else {
+                            sr.append("");
+                        }
+
+
+                        if (!dto.get(i).getRi().equals("null")) {
+                            sr.append(" " + dto.get(i).getRi());
+                        } else {
+                            sr.append("");
+                        }
+                        rc.setText(dto.get(i).getCode());
+                        break;
+
+
+
+                    }
+                }
+            }
+            if (!userPref.getString("filename","null").equals("null")) {
+                this.imageView = findViewById(R.id.mypageimg);
+
+                String filename = userPref.getString("filepath", "");
+
+
+                RequestOptions requestOptions = new RequestOptions();
+                requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
+                requestOptions.skipMemoryCache(true);
+                requestOptions.signature(new ObjectKey(System.currentTimeMillis()));
+                requestOptions.transform(new RoundedCorners(20));
+
+
+                Glide.with(this)
+                        .load(Common.SERVER_URL+filename)
+                        .apply(requestOptions)
+                        .into(imageView);
+
+
+
+            }
         }
     }
 
@@ -408,7 +538,7 @@ public class Mypage extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         switch (requestCode) {
-            case REQUEST_CODE_PERMISSIONS:
+            case PERMISSIONS_CODE_REQUEST:
                 if (ActivityCompat.checkSelfPermission(this,
                         Manifest.permission.CAMERA)
                         != PackageManager.PERMISSION_GRANTED
@@ -440,7 +570,7 @@ public class Mypage extends AppCompatActivity {
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
                 photoFile = null;
                 try {
-                    photoFile = createImageFile();
+                    this.photoFile = createImageFile();
                 } catch (IOException ex) {
                     // Error occurred while creating the File
                 }
@@ -448,19 +578,20 @@ public class Mypage extends AppCompatActivity {
                 // photoUri는 createImageFile() 만들어진 File 객체에서 취득
                 if (photoFile != null) {
                     // FileProvider는 AndroidManifest에서 추가했던 <Provider>요소를 이용해 uri를 불러오는 역할
-                    photoUri = FileProvider.getUriForFile(com.example.skyobserver.member.Mypage.this, getPackageName(), photoFile);
+                    this.photoUri = FileProvider.getUriForFile(Mypage.this, getPackageName(), photoFile);
+                    // this.photoUri = Uri.fromFile(photoFile);
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                    startActivityForResult(takePictureIntent, CAMERA_CODE);
                 }
             }
         } else if (photo.equals("gallery")) {
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_PICK);
-            startActivityForResult(intent, REQUEST_CODE);
+            startActivityForResult(intent, GALLERY_CODE);
 //            mua = new MemberUpdateAsync();
 //            mua.execute(imageFilePath.toString());
-            Toast.makeText(getApplicationContext(), "사진 파일 선택", Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(getApplicationContext(), "사진 파일 선택", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -479,5 +610,60 @@ public class Mypage extends AppCompatActivity {
         imageFilePath = image.getAbsolutePath();
         Log.i("imageFilePath", "==========" + imageFilePath);
         return image;
+    }
+
+    private Intent getCropIntent(Uri inputUri, Uri outPutUri) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(inputUri, "image/*");
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        intent.putExtra("outputX", true);
+       intent.putExtra("outputY", true);
+        intent.putExtra("scale", true);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, outPutUri);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString());
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+        return intent;
+    }
+
+    public void setRegion(ArrayList<RegiongpsDTO> searchDTO, int pos) {
+
+
+
+
+
+
+
+        if (!searchDTO.get(pos).getSido().equals("null")) {
+            sr.setText(searchDTO.get(pos).getSido());
+        } else {
+            sr.setText("");
+        }
+
+
+        if (!searchDTO.get(pos).getGugun().equals("null")) {
+            sr.append(" " + searchDTO.get(pos).getGugun());
+        } else {
+            sr.append("");
+        }
+
+
+        if (!searchDTO.get(pos).getDong().equals("null")) {
+            sr.append(" " + searchDTO.get(pos).getDong());
+        } else {
+            sr.append("");
+        }
+
+
+        if (!searchDTO.get(pos).getRi().equals("null")) {
+            sr.append(" " + searchDTO.get(pos).getRi());
+        } else {
+            sr.append("");
+        }
+
+        rc.setText(searchDTO.get(pos).getCode());
+
     }
 }

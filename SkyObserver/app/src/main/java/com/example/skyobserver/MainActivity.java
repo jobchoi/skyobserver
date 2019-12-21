@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -33,14 +32,10 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.signature.ObjectKey;
 import com.example.skyobserver.board.BoardActivity;
 import com.example.skyobserver.iot.IoT;
@@ -48,7 +43,9 @@ import com.example.skyobserver.member.Login;
 import com.example.skyobserver.member.Mypage;
 import com.example.skyobserver.msmap.MStation;
 import com.example.skyobserver.msmap.MeasuringStation;
+import com.example.skyobserver.msmap.RegiongpsDTO;
 import com.example.skyobserver.nearstation.NearSt_Fragment;
+import com.example.skyobserver.notics.NoticeActivity;
 import com.example.skyobserver.statistics.Statistics;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -62,24 +59,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Fragment main_Fragment;
     Fragment nearSt_Fragment;
 
-    public static GeoPoint tmset;
+
+  //  public static String[] tmset;
     public static final int REQUEST_CODE_MENU = 101;
-    public static final int REQUEST_CODE_BOARD = 102;
+    //public static final int REQUEST_CODE_BOARD = 102;
     private boolean signupActivityLock = false;
-    public static final int REQUEST_CODE_PERMISSIONS = 1009;
     public static final int REQUEST_CODE_MYPAGE = 8001;
 
     public static ArrayList<MStation> mStion = new ArrayList<>();
+    public static ArrayList<RegiongpsDTO> regiongpsDTO = new ArrayList<>();
 
-    private String profileTest;
+    //ImageView profile;
 
-    ImageView profile;
     ImageView imageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        Intent intent = getIntent(); /*데이터 수신*/
+
+        mStion= (ArrayList<MStation>)intent.getSerializableExtra("mStations");
+        //nearindex= (ArrayList<Integer>)intent.getSerializableExtra("nearindex");
+        //tmset= intent.getStringArrayExtra("XY");
 
         SharedPreferences userPref = getSharedPreferences("userPref", Activity.MODE_PRIVATE);
         buf = userPref.getString("emails","");
@@ -150,11 +153,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
                 if (position == 0) {
-                    toolbar.setTitle("Main");
+                    toolbar.setTitle("Fine Air");
 
                 } else if (position == 1) {
 
-                    toolbar.setTitle("Near Station");
+                    toolbar.setTitle("가까운 측정소");
                 }
 //
             }
@@ -172,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         });
-
+            //하단탭
         BottomNavigationView bottomNavigation = findViewById(R.id.bottom_navigation);
         bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -192,12 +195,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }
                         return true;
                     case R.id.tab3:
-                        MeasuringStation ms = new MeasuringStation(MainActivity.this);
+                       /* MeasuringStation ms = new MeasuringStation(MainActivity.this);
                         try {
                             ms.execute().get();
                         } catch (Exception e) {
                             e.printStackTrace();
-                        }
+                        }*/
 
 
                         Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
@@ -254,28 +257,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void restoreState(){
         SharedPreferences userPref = getSharedPreferences("userPref", Activity.MODE_PRIVATE);
 
-
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerview=navigationView.getHeaderView(0);
 
-        TextView idtextView =headerview.findViewById(R.id.getidtextView);
-        TextView emailtextView =headerview.findViewById(R.id.getemailtextView);
+        if(!userPref.getString("filename","null").equals("null")){
+            String pImge = userPref.getString("filepath","");
 
+            Log.d("restoreState : ",pImge);
 
-
-        if (userPref.getAll().values().toString().length()>2 ) {
-            // 필요한 형식을 가져오가너 getAll로 모든 값을 사용.
-//            getData = userPref.getString("name", "");
-//            getData = userPref.getString("id","");
-            Log.d("restoreState값확인 : ",userPref.getAll().values().toString());
-
-
-            idtextView.setText(userPref.getString("email", ""));
-            final String pImge = userPref.getString("filename","");
-            profileTest = pImge;
-
-            Log.d("restoreState값확인 : ",pImge);
 
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
@@ -283,33 +273,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             requestOptions.signature(new ObjectKey(System.currentTimeMillis()));
             requestOptions.transform(new CenterCrop(), new RoundedCorners(20));
 
+
             Glide.with(this)
-                        .load(pImge)
-                        .apply(requestOptions)
-                        .into(imageView);
-
-                    // Listener 사용 보류중
-                /*Glide.with(this)
-                    .load(pImge).listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {                        ;
-                        Toast.makeText(MainActivity.this, "테스트", Toast.LENGTH_SHORT).show();
-                        Glide.with( MainActivity.this)
-                        .load(pImge)
-                        .apply();
-
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        return false;
-                    }
-                })
+                    .load(Common.SERVER_URL+pImge)
                     .apply(requestOptions)
-                    .into(imageView);*/
+                    .into(imageView);
 
             Log.d("ProfileMypage :",pImge);
+
+        }
+
+        if (!userPref.getString("email","").equals("")) {
+
+
+            TextView idtextView =headerview.findViewById(R.id.getidtextView);
+            TextView emailtextView =headerview.findViewById(R.id.getemailtextView);
+            // 필요한 형식을 가져오가너 getAll로 모든 값을 사용.
+//            getData = userPref.getString("name", "");
+//            getData = userPref.getString("id","");
+            Log.d("restoreState값확인 : ",userPref.getAll().values().toString());
+
+
+            idtextView.setText(userPref.getString("nickname", ""));
+
+
 
             signupActivityLock = true;
         }
@@ -342,52 +329,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStart() {
         super.onStart();
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions
-                    (this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_CODE_PERMISSIONS);
-            return;
-        }
-
-
-
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        try {
-           Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-            GeoPoint lastLoc = new GeoPoint(location.getLongitude(), location.getLatitude());
-
-            //LatLng hanul = new LatLng(35.153469, 126.887775);
-
-           // GeoPoint lastLoc = new GeoPoint(hanul.longitude,hanul.latitude);
-
-            GeoPoint tmset = GeoTrans.convert(GeoTrans.GEO, GeoTrans.TM, lastLoc);
-            this.tmset=tmset;
-           // Log.d("process",tmset.getX()+"      "+tmset.getY());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
 
         super.onStart();
     }
 
-    public void updateProducts(final ArrayList<MStation> mStations) {
-        this.mStion = mStations;
-    }
+//    public void updateProducts(final ArrayList<MStation> mStations) {
+//        this.mStion = mStations;
+//    }
 
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.main, menu);
+//        return true;
+//    }
 /*
 
     @Override
@@ -397,14 +354,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 || super.onSupportNavigateUp();
     }
 */
-
+        //네비게이션 드로워
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-            Toast.makeText(this, "마이페이지 확인", Toast.LENGTH_SHORT).show();
+        if (id == R.id.my_page) {
+            //Toast.makeText(this, "마이페이지 확인", Toast.LENGTH_SHORT).show();
 
             // 로그인 한 상태이면 Intent 활성화
             // SharedPreferences를 이용하여 Activity 활성화 결정,
@@ -423,9 +380,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(MainActivity.this, Statistics.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.notice) {
 
-        } else if (id == R.id.nav_send) {
+            Intent intent = new Intent(MainActivity.this, NoticeActivity.class);
+            startActivity(intent);
+
+        } else if (id == R.id.logout) {
             clearState();
             NavigationView navigationView = findViewById(R.id.nav_view);
             navigationView.setNavigationItemSelectedListener(this);
@@ -447,7 +407,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
 
     class MyPagerAdapter extends FragmentStatePagerAdapter {
@@ -486,5 +445,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onDestroy() {
         super.onDestroy();
         clearState();
+    }
+
+    public  void Regiongpsdata(ArrayList<RegiongpsDTO> regiongpsDTO){
+        this.regiongpsDTO=regiongpsDTO;
     }
 }

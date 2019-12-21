@@ -74,7 +74,7 @@ public class BoardWrite extends AppCompatActivity {
 
     Button sendBtn;
 
-    String sendUrl = Common.SERVER_URL+"/androidwrite.hanul";
+    String sendUrl = Common.SERVER_URL+"/android/boardinsert";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +108,7 @@ public class BoardWrite extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                textView.setText(Integer.toString(s.toString().length()) + "/100");
+                textView.setText(s.toString().length() + "/100");
                 int cnt = s.length();
                 if (cnt > 100) {
                     textView.setTextColor(Color.parseColor("#ff0000"));
@@ -205,7 +205,9 @@ public class BoardWrite extends AppCompatActivity {
 
 
             SharedPreferences userPref = getSharedPreferences("userPref", Activity.MODE_PRIVATE);
-            String buf = userPref.getString("email","");
+            String buf = userPref.getString("email","").trim();
+            String nick = userPref.getString("nickname","");
+
             Log.d("111111111","==========="+buf);
             if(imageFilePath!=null) {
                 String imgPath = imageFilePath.toString();
@@ -235,6 +237,7 @@ public class BoardWrite extends AppCompatActivity {
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setUseCaches(false); // 캐쉬 사용 안함.
                     conn.setDoOutput(true);
+                    conn.setDoInput(true);
 
                     // POST 방식 설정(파일은 반드시 POST방식으로 전송해야 함)
                     conn.setRequestMethod("POST");
@@ -252,15 +255,21 @@ public class BoardWrite extends AppCompatActivity {
                     dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
                     dos.writeBytes("Content-Disposition: form-data; name=\"content\"\r\n\r\n" + URLEncoder.encode(content1.getText().toString(), "UTF-8") + lindEnd);
                     dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
-                    dos.writeBytes("Content-Disposition: form-data; name=\"id\"\r\n\r\n" + URLEncoder.encode(buf, "UTF-8") + lindEnd);
+                    dos.writeBytes("Content-Disposition: form-data; name=\"nickName\"\r\n\r\n" + URLEncoder.encode(nick, "UTF-8") + lindEnd);
+                    dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
+                    dos.writeBytes("Content-Disposition: form-data; name=\"email\"\r\n\r\n" + buf.trim() +lindEnd);
 //                    dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
 //                    dos.writeBytes("Content-Disposition: form-data; name=\"p_price2\"\r\n\r\n" + p_price2.getText().toString() + lindEnd);
 //                    dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
 //                    dos.writeBytes("Content-Disposition: form-data; name=\"p_content\"\r\n\r\n" + URLEncoder.encode(p_content.getText().toString(), "UTF-8") + lindEnd);
-                    if(imageFilePath!=null) {
+                   if(imageFilePath!=null) {
                         dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
                         dos.writeBytes("Content-Disposition: form-data; name=\"imageView\";filename=\"" + imageFilePath.toString().trim() + "\"" + lindEnd);
-                    }
+                   }else{
+
+
+                   }
+
                     dos.writeBytes(lindEnd);
 
                     if(imageFilePath!=null) {
@@ -282,7 +291,9 @@ public class BoardWrite extends AppCompatActivity {
                         Log.i("conn.getResponseCode()", "" + conn.getResponseCode());
                         Log.i("상품 등록 테스트", "실패");
                     }
-                    fis.close();
+                    if(imageFilePath!=null) {
+                        fis.close();
+                    }
                     dos.flush();
                     dos.close();
 
@@ -298,7 +309,7 @@ public class BoardWrite extends AppCompatActivity {
         protected void onPostExecute(String http_result_ok) {
             Log.d("result_ok====> ", http_result_ok);
             if (http_result_ok.equals("200")) {
-                Toast.makeText(BoardWrite.this, "등록 성공", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BoardWrite.this, "새글이 등록되었습니다", Toast.LENGTH_SHORT).show();
                 setResult(RESULT_OK);
                 finish();
             } else {
@@ -422,7 +433,7 @@ public class BoardWrite extends AppCompatActivity {
             }
             else if(resultCode == RESULT_CANCELED)
             {
-                Toast.makeText(this, "사진 선택 취소", Toast.LENGTH_LONG).show();
+              //  Toast.makeText(this, "사진 선택 취소", Toast.LENGTH_LONG).show();
             }
         }
 

@@ -46,12 +46,12 @@ public class Signup extends AppCompatActivity {
     EditText pwd ;
     EditText repwd ;
 
-    ProductWriteAsync pwa;
+    singUpAsync pwa;
 
     String strPwd ;
     String strRePwd;
     //String sendUrl = Common.SERVER_URL+"/signupactionand.hanul";
-    String sendUrl = Common.SERVER_URL+"/signupactionand.ob";
+    String sendUrl = Common.SERVER_URL+"/androidsingup";
 
 
     String regExpn = "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
@@ -76,7 +76,7 @@ public class Signup extends AppCompatActivity {
         actionBar.setTitle("회원가입");
 
         Button signUpButton = findViewById(R.id.buttonEnroll);
-
+        Button cancel=findViewById(R.id.buttonCancel);
         pwd = findViewById(R.id.pwd_my);
         repwd = findViewById(R.id.repwd_my);
         email = findViewById(R.id.email_my);
@@ -93,7 +93,7 @@ public class Signup extends AppCompatActivity {
                     Pattern pattern = Pattern.compile(regExpn, Pattern.CASE_INSENSITIVE);
                     Matcher matcher = pattern.matcher(inputStr);
                     if (matcher.matches()) {
-                        Toast.makeText(Signup.this, "ok", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(Signup.this, "ok", Toast.LENGTH_SHORT).show();
                         Log.d("SignUp","Email pattern OK");
                         formatEmail = true;
                         flag = true;
@@ -121,7 +121,7 @@ public class Signup extends AppCompatActivity {
                     
                     if(comparePwd(strPwd, strRePwd )){
                         Log.d("SignupSendData", "Task 실행");
-                        pwa = new ProductWriteAsync();
+                        pwa = new singUpAsync();
                         pwa.execute(sendUrl);
                     } else {
                         Toast.makeText(Signup.this, "입력한 password가 다릅니다.", Toast.LENGTH_SHORT).show();
@@ -137,6 +137,14 @@ public class Signup extends AppCompatActivity {
                 }
             }
         });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
 
 
@@ -148,9 +156,26 @@ public class Signup extends AppCompatActivity {
         }
     }
 
+    public class SendSignupDataTaask extends AsyncTask<String, Void, String>{
+        @Override
+        protected String doInBackground(String... email) {
+            executeSend(email);
+            return null;
+        }
 
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Log.d("SendSignup","onPostExcute" +s);
+        }
 
-    protected class ProductWriteAsync extends AsyncTask<String, Void, String> {     //test
+        public  String executeSend(String... email){
+            Log.d("Signup DATA ","email[0]"+email[0]);
+            return null;
+        }
+    }
+
+    protected class singUpAsync extends AsyncTask<String, Void, String> {     //test
 //        private class ProductWriteAsync extends AsyncTask<String, String, String> {   //  origin
         @Override
         protected String doInBackground(String... URI) {
@@ -181,9 +206,9 @@ public class Signup extends AppCompatActivity {
                 //  twoHyphens 부분과 Content-Disposition: 부분을 쌍으로 가져감
 
                 dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
-                dos.writeBytes("Content-Disposition: form-data; name=\"email\"\r\n\r\n" + URLEncoder.encode(email.getText().toString(), "UTF-8") + lindEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"email\"\r\n\r\n" + email.getText().toString().trim()+ lindEnd);
                 dos.writeBytes(twoHyphens + boundary + lindEnd); // header역할
-                dos.writeBytes("Content-Disposition: form-data; name=\"pwd\"\r\n\r\n" + URLEncoder.encode(pwd.getText().toString(), "UTF-8") + lindEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"pwd\"\r\n\r\n" +pwd.getText().toString().trim());
 
                 Log.d("결과 확인 1 : ",email.getText().toString());
                 Log.d("결과 확인 2 : ",pwd.getText().toString());
