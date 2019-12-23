@@ -37,6 +37,7 @@ import com.example.skyobserver.Common;
 import com.example.skyobserver.R;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -44,9 +45,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 class BoardDialog {
@@ -90,19 +94,19 @@ class BoardDialog {
 
 
          if(dto.getEmail().equals(logId)){
-                      deleteMOdifyBtn.setVisibility(View.VISIBLE);
+                   //   deleteMOdifyBtn.setVisibility(View.VISIBLE);
          }
 
 
-        title.setText(dto.getSUBJECT());
-        id.setText(dto.getName());
-        contents.setText(dto.getCONTENT());
-        if (dto.getFILENAME() != null) {
+        title.setText(dto.getSubject());
+        id.setText(dto.getNickName());
+        contents.setText(dto.getContent());
+        if (dto.getFilename() != null) {
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
             requestOptions.skipMemoryCache(true);
             requestOptions.signature(new ObjectKey(System.currentTimeMillis()));
-            requestManager.load(dto.getFILENAME()).apply(requestOptions).into(boardImg);
+            requestManager.load(Common.SERVER_URL+dto.getFilepath()).apply(requestOptions).into(boardImg);
         }
 
         listViewl=dial.findViewById(R.id.dialRepllist);
@@ -116,7 +120,7 @@ class BoardDialog {
        // setListViewHeightBasedOnChildren(listViewl);
 
 
-        this.articleNo = dto.getARTICLENO();
+        this.articleNo = dto.getArticleNo();
 
         try {
             new replyLoad().execute(articleNo);
@@ -170,7 +174,7 @@ class BoardDialog {
                         String del = "delete";
 
                         try {
-                            new deletModift().execute(del, dto.getARTICLENO()).get();
+                            new deletModift().execute(del, dto.getArticleNo()).get();
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -247,7 +251,7 @@ class BoardDialog {
         protected ArrayList<ArticleReplyDTO> doInBackground(String... strings) {
 
             ArrayList<ArticleReplyDTO> data = new ArrayList<>();
-            String url = Common.SERVER_URL+"/articlereplyload.hanul";
+            String url = Common.SERVER_URL+"/android/replylist";
 
             try {
 
@@ -255,8 +259,8 @@ class BoardDialog {
 
 
                 JSONObject json9 = new JSONObject(jsonPage);
-                JSONArray jArr = json9.getJSONArray("reply");
-                Log.d("reply:", jArr.toString());
+                JSONArray jArr = json9.getJSONArray("replylist");
+              //  Log.d("reply:", jArr.toString());
                 for (int i = 0; i < jArr.length(); i++) {
 
                     json9 = jArr.getJSONObject(i);
@@ -264,10 +268,10 @@ class BoardDialog {
 
                     String articleNo = json9.getString("articleNo");
                     String replyunum = json9.getString("replyunum");
-                    String replycon = json9.getString("relycon");
+                    String replycon = json9.getString("replycon");
                     String name = json9.getString("name");
                     String sumnail = json9.getString("sumnail");
-                    String heart = json9.getString("heart");
+                    String heart = null ;//json9.getString("heart");
                     String replydate = json9.getString("replydate");
 
                     ArticleReplyDTO aDTO = new ArticleReplyDTO(articleNo, replyunum, replycon, name, sumnail, heart, replydate);
@@ -285,7 +289,15 @@ class BoardDialog {
             BufferedReader bufreader = null;
             HttpURLConnection urlConnection = null;
 
+
+          //  HashMap<String,String> map=new HashMap<>();
+          //  map.put("articleNo",strings);
+           // String articleNo="{\"articleNo\":\""+strings+"\"}";
+           // String articleNo="?articleNo=" + strings;
             StringBuffer page = new StringBuffer();
+            StringBuffer sbParams = new StringBuffer();
+            sbParams.append("articleNo").append("=").append(strings);
+
             try {
                 URL url = new URL(pUrl);
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -298,7 +310,7 @@ class BoardDialog {
 
                 OutputStream out_stream = urlConnection.getOutputStream();
 
-                out_stream.write(strings.getBytes("UTF-8"));
+                out_stream.write(sbParams.toString().getBytes("UTF-8"));
                 out_stream.flush();
                 out_stream.close();
 
@@ -348,7 +360,7 @@ class BoardDialog {
             protected String doInBackground(String... strings) {
                 String page=null;
                 ArrayList<ArticleReplyDTO> data = new ArrayList<>();
-                String url = Common.SERVER_URL+"/dialreplywrite.hanul";
+                String url = Common.SERVER_URL+"/android/replywrite";
 
                 try {
 
@@ -368,22 +380,36 @@ class BoardDialog {
 
                 String rr=replyedit.getText().toString();
 
-                String reply= "{\"articleNo\":\""+strings+"\",\"id\":\""+logId+"\",\"relycon\":\""+rr+"\"}";
+                String reply= "{\"articleNo\":\""+strings+"\",\"email\":\""+logId+"\",\"replycon\":\""+rr+"\"}";
+
+                JSONObject jsonObject=new JSONObject();
+                try {
+                    jsonObject.put("articleNo",articleNo);
+                    jsonObject.put("email",logId);
+                    jsonObject.put("replycon",rr);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
                 StringBuffer page = new StringBuffer();
                 try {
                     URL url = new URL(pUrl);
                     urlConnection = (HttpURLConnection) url.openConnection();
                     urlConnection.setRequestMethod("POST");
+                    urlConnection.setRequestProperty("Content-Type", "application/json");
                     urlConnection.setDoOutput(true);
                     urlConnection.setDoInput(true);
                     urlConnection.setUseCaches(false);
                     urlConnection.setDefaultUseCaches(false);
 
 
+
+                  //  OutputStreamWriter out_stream = new OutputStreamWriter(urlConnection.getOutputStream());
+
+
                     OutputStream out_stream = urlConnection.getOutputStream();
 
-                    out_stream.write(reply.getBytes("UTF-8"));
+                    out_stream.write(jsonObject.toString().getBytes("utf-8"));
                     out_stream.flush();
                     out_stream.close();
 
@@ -416,7 +442,7 @@ class BoardDialog {
 
 
 
-                if(page.equals("1")) {
+                if(page!=null && page.equals("1")) {
                     Toast.makeText(context, "등록", Toast.LENGTH_SHORT).show();
                     replupdate();
                 }else{

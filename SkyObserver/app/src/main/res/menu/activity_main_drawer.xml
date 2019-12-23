@@ -5,7 +5,7 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_home"
+            android:id="@+id/my_page"
             android:icon="@android:drawable/ic_menu_myplaces"
             android:title="마이페이지" />
         <item
@@ -25,11 +25,11 @@
     <item android:title="" >
         <menu>
             <item
-                android:id="@+id/nav_share"
+                android:id="@+id/notice"
                 android:icon="@android:drawable/stat_notify_chat"
                 android:title="공지사항" />
             <item
-                android:id="@+id/nav_send"
+                android:id="@+id/logout"
                 android:icon="@drawable/ic_menu_send"
                 android:title="로그아웃" />
         </menu>

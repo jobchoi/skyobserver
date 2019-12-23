@@ -3,8 +3,12 @@ package com.example.skyobserver.msmap;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
-import com.example.skyobserver.MainActivity;
+import com.example.skyobserver.Common;
+import com.example.skyobserver.Intro;
+import com.example.skyobserver.R;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,26 +21,42 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MeasuringStation extends AsyncTask<String, Void, ArrayList<MStation>> {
-
+public class MeasuringStation extends AsyncTask<String, Integer, ArrayList<MStation>> {
     ProgressDialog progressDialog;
     Activity activity;
     boolean isConnection = false;
+    TextView textView;
+    ProgressBar progressBar;
 
-
-    String url = "http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getMsrstnList?pageNo=1&numOfRows=999&ServiceKey=YDX9bhqzzi6UFHEraxXWeH%2FubajSBOmM4674vxXkNJLOrRm4IBlLSy8nJOgN%2Bmv%2Bq1MebN7zvZ7AmwsXzIRSVQ%3D%3D&_returnType=json";
-
+    //String url = "http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getMsrstnList?pageNo=1&numOfRows=999&ServiceKey=YDX9bhqzzi6UFHEraxXWeH%2FubajSBOmM4674vxXkNJLOrRm4IBlLSy8nJOgN%2Bmv%2Bq1MebN7zvZ7AmwsXzIRSVQ%3D%3D&_returnType=json";
+    String url = Common.SERVER_URL + "/allstationmeasure";
 
     ArrayList<MStation> data = new ArrayList<>();
 
+    public MeasuringStation( ) {
+    }
     public MeasuringStation(Activity activity) {
         this.activity = activity;
     }
 
     @Override
     protected void onPreExecute() {
-        progressDialog = ProgressDialog.show(activity, "Reading", "데이터 수신중...");
+//        progressDialog=new ProgressDialog(activity);
+//         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//         progressDialog.setMessage(" 데이터 읽어 오는중");
+//         progressDialog.show();
         super.onPreExecute();
+      //  progressDialog = ProgressDialog.show(activity, "Reading", "데이터 수신중...");
+       //progressBar=activity.findViewById(R.id.textprog);
+
+        if (activity instanceof Intro) {
+            progressBar= activity.findViewById(R.id.introprog);
+            progressBar.setProgress(0);
+            textView= activity.findViewById(R.id.textprog);
+        }
+
+
+
     }
 
     @Override
@@ -47,65 +67,93 @@ public class MeasuringStation extends AsyncTask<String, Void, ArrayList<MStation
             String jsonPage = getStringFromUrl(url);
 
             JSONObject json = new JSONObject(jsonPage);
-            JSONArray jArr = json.getJSONArray("list");
+            JSONArray jArr = json.getJSONArray("smlist");
+
+            if (activity instanceof Intro) {
+                progressBar.setMax(jArr.length());
+            }
 
             for (int i = 0; i < jArr.length(); i++) {
+
+                if (activity instanceof Intro) {
+                    publishProgress(i);
+                }
 
                 json = jArr.getJSONObject(i);
 
 
-                String addr = json.getString("addr");
-               // String map = json.getString("map");
-                //String oper = json.getString("oper");
-                String photo = json.getString("photo");
                 String stationName = json.getString("stationName");
+                // String map = json.getString("map");
+                //String oper = json.getString("oper");
+                //String photo = json.getString("photo");
+                String pm10value = json.getString("pm10value");
+                String pm25value = json.getString("pm25value");
                 String dmX = json.getString("dmX");
                 String dmY = json.getString("dmY");
+                String addr = json.getString("addr");
+                String pm10Grade1h = null;
+                String pm25Grade1h = null;
 
 
-/*
+                if (pm10value.equals("-")) {
+                    pm10Grade1h = "-";
+                } else {
 
-                    String url2 = "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?stationName=" + stationName + "&dataTerm=daily&pageNo=1&numOfRows=3&ServiceKey=YDX9bhqzzi6UFHEraxXWeH%2FubajSBOmM4674vxXkNJLOrRm4IBlLSy8nJOgN%2Bmv%2Bq1MebN7zvZ7AmwsXzIRSVQ%3D%3D&ver=1.3&_returnType=json";
+                    if (0 <= Integer.parseInt(pm10value) && 30 >= Integer.parseInt(pm10value)) {
+                        pm10Grade1h = "1";
+                    } else if (30 < Integer.parseInt(pm10value) && 80 >= Integer.parseInt(pm10value)) {
+                        pm10Grade1h = "2";
+                    } else if (80 < Integer.parseInt(pm10value) && 150 >= Integer.parseInt(pm10value)) {
+                        pm10Grade1h = "3";
+                    } else {
+                        pm10Grade1h = "4";
+                    }
+                }
 
-                    String jsonPage2 = getStringFromUrl(url2);
+                if (pm25value.equals("-")) {
+                    pm25Grade1h = "-";
+                } else {
 
-                    JSONObject json2 = new JSONObject(jsonPage2);
-                    JSONArray jArr2 = json2.getJSONArray("list");
-
-                    json2 = jArr2.getJSONObject(2);
-
-
-                    String pm10Value = json2.getString("pm10Value");
-                    String pm10Value24 = json2.getString("pm10Value24");
-                    String pm25Value = json2.getString("pm25Value");
-                    String pm25Value24 = json2.getString("pm25Value24");
-                    String pm10Grade = json2.getString("pm10Grade");
-                    String pm25Grade = json2.getString("pm25Grade");
-                    String pm10Grade1h = json2.getString("pm10Grade1h");
-                    String pm25Grade1h = json2.getString("pm25Grade1h");
-
-                    //Log.d("Product", "=======" + dmX);
-
-
-                    MStation mStation = new MStation( addr,  photo,  stationName,  dmX,  dmY,    pm10Value,  pm10Value24,  pm25Value,  pm25Value24,  pm10Grade,  pm25Grade,  pm10Grade1h,  pm25Grade1h);
-*/
-                MStation mStation = new MStation( addr,  photo,  stationName,  dmX,  dmY);
-
-                    this.data.add(mStation);
-
-                    isConnection = true;
-
+                    if (0 <= Integer.parseInt(pm25value) && 15 >= Integer.parseInt(pm25value)) {
+                        pm25Grade1h = "1";
+                    } else if (15 < Integer.parseInt(pm25value) && 35 >= Integer.parseInt(pm25value)) {
+                        pm25Grade1h = "2";
+                    } else if (35 < Integer.parseInt(pm25value) && 75 >= Integer.parseInt(pm25value)) {
+                        pm25Grade1h = "3";
+                    } else {
+                        pm25Grade1h = "4";
+                    }
+                }
+                MStation mStation = new MStation(addr, stationName, dmX, dmY, pm10value, pm25value, pm10Grade1h, pm25Grade1h);
+                this.data.add(mStation);
+                isConnection = true;
+                Thread.sleep(1);
             }
 
 
         } catch (Exception e) {
             e.printStackTrace();
             isConnection = true;
+        }finally {
+
         }
 
 
         return data;
 
+
+    }
+
+    @Override
+    protected void onProgressUpdate(Integer... values) {
+        super.onProgressUpdate(values);
+        if (values[0]!=progressBar.getMax()-1) {
+            progressBar.setProgress(values[0]);
+            textView.setText("측정소 데이터 가져오는중 ");
+        }else{
+            progressBar.setProgress(progressBar.getMax());
+            textView.setText("측정소 데이터 로딩 완료 ");
+        }
 
     }
 
@@ -154,12 +202,16 @@ public class MeasuringStation extends AsyncTask<String, Void, ArrayList<MStation
         super.onPostExecute(data);
 
         if (isConnection) {
-            if (activity instanceof MainActivity) {
-                ((MainActivity) activity).updateProducts(data);
+            if (activity instanceof Intro) {
+                ((Intro) activity).updateProducts(data);
+                ((Intro) activity).gpsdataget(data);
+
+
             }
-            progressDialog.dismiss();
+
+           // progressDialog.dismiss();
         } else {
-            progressDialog.dismiss();
+          //  progressDialog.dismiss();
         }
     }
 }

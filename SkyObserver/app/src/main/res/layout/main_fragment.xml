@@ -1,162 +1,333 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="20dp"
-    android:paddingBottom="50dp"
-    android:paddingTop="10dp"
-    android:id="@+id/mfback"
+    android:orientation="vertical"
+
+
+
     >
 
+    <LinearLayout
 
-    <ImageView
-        android:id="@+id/chungnamimg"
+        android:id="@+id/mainLinear"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/chungnam01" />
-
-    <ImageView
-        android:id="@+id/chungbukimg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/chungbuk01" />
-
-    <ImageView
-        android:id="@+id/gangwonimg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/gangwon01" />
-
-    <ImageView
-        android:id="@+id/gyeonggiimg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/gyeonggi01" />
-
-
-    <ImageView
-        android:id="@+id/gyeongbukimg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/gyeongbuk01" />
-
-    <ImageView
-        android:id="@+id/gyeongnamimg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/gyeongnam01" />
-
-    <ImageView
-        android:id="@+id/jeonnamimg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/jeonnam01" />
-
-    <ImageView
-        android:id="@+id/jeonbukimg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/jeonbuk01" />
-
-    <ImageView
-        android:id="@+id/incheonimg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/incheon01" />
-
-    <ImageView
-        android:id="@+id/daejeonimg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/daejeon01" />
-
-    <ImageView
-        android:id="@+id/daeguimg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/daegu01" />
-
-    <ImageView
-        android:id="@+id/gwangjuimg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/gwangju1" />
-
-    <ImageView
-        android:id="@+id/ulsanimg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/ulsan01" />
-
-    <ImageView
-        android:id="@+id/busanimg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/busan01" />
-
-    <ImageView
-        android:id="@+id/sejongimg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/sejong01" />
-
-    <ImageView
-        android:id="@+id/seoulimg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/seoul01" />
-
-    <ImageView
-        android:id="@+id/jejuimg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/jeju01" />
-
-    <ImageView
-        android:id="@+id/mapborder"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/mapborder" />
-
-    <ImageView
-        android:id="@+id/suchiimg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/pm10" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="20dp">
+        android:layout_height="95dp"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:visibility="gone"
+        android:gravity="top"
+        android:weightSum="4">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true">
+            android:layout_weight="2"
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/pm10"
+            <LinearLayout
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="날씨" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="온도" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/regionset"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:background="@drawable/button2"
-                android:text="미세먼지"
-                android:textStyle="bold"
-                android:onClick="pm10"/>
+                android:text="지역"
+                android:textSize="15pt" />
 
-            <Button
-                android:id="@+id/pm25"
+            <TextView
+                android:id="@+id/stationset"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:background="@drawable/button1"
-                android:text="초미세먼지"
-                android:textStyle="bold"
-                android:onClick="pm25"/>
+                android:text="스테이션"
+                android:textSize="8pt" />
+
+
         </LinearLayout>
-    </RelativeLayout>
-</FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_marginHorizontal="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="미세먼지" />
+
+            <TextView
+                android:id="@+id/pm10set"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:text="12"
+                android:textAlignment="center"
+                android:textColor="#fff"
+                android:background="@drawable/layoutcircle01"
+                android:textSize="12pt"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="초미세먼지" />
+
+            <TextView
+                android:id="@+id/pm25set"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:text="12"
+                android:textAlignment="center"
+                android:textColor="#fff"
+                android:background="@drawable/layoutcircle01"
+                android:textSize="12pt" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#FFFFFF"
+        android:gravity="center">
+
+
+
+
+
+        <FrameLayout
+            android:id="@+id/mfback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+
+            >
+
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/whitefater2"
+                android:adjustViewBounds="true"
+
+                />
+            <ImageView
+                android:id="@+id/chungnamimg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/chungnam01"
+                android:adjustViewBounds="true"
+                />
+
+            <ImageView
+                android:id="@+id/chungbukimg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/chungbuk01"
+                android:adjustViewBounds="true"/>
+
+            <ImageView
+                android:id="@+id/gangwonimg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/gangwon01"
+                android:adjustViewBounds="true"/>
+
+            <ImageView
+                android:id="@+id/gyeonggiimg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/gyeonggi01"
+                android:adjustViewBounds="true"/>
+
+
+            <ImageView
+                android:id="@+id/gyeongbukimg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/gyeongbuk01"
+                android:adjustViewBounds="true"/>
+
+            <ImageView
+                android:id="@+id/gyeongnamimg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/gyeongnam01"
+                android:adjustViewBounds="true"/>
+
+            <ImageView
+                android:id="@+id/jeonnamimg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/jeonnam01"
+                android:adjustViewBounds="true"/>
+
+            <ImageView
+                android:id="@+id/jeonbukimg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/jeonbuk01"
+                android:adjustViewBounds="true"/>
+
+            <ImageView
+                android:id="@+id/incheonimg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/incheon01"
+                android:adjustViewBounds="true"/>
+
+            <ImageView
+                android:id="@+id/daejeonimg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/daejeon01"
+                android:adjustViewBounds="true"/>
+
+            <ImageView
+                android:id="@+id/daeguimg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/daegu01"
+                android:adjustViewBounds="true"/>
+
+            <ImageView
+                android:id="@+id/gwangjuimg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/gwangju1"
+                android:adjustViewBounds="true"/>
+
+            <ImageView
+                android:id="@+id/ulsanimg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ulsan01"
+                android:adjustViewBounds="true"/>
+
+            <ImageView
+                android:id="@+id/busanimg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/busan01"
+                android:adjustViewBounds="true"/>
+
+            <ImageView
+                android:id="@+id/sejongimg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/sejong01"
+                android:adjustViewBounds="true"/>
+
+            <ImageView
+                android:id="@+id/seoulimg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/seoul01"
+                android:adjustViewBounds="true"/>
+
+            <ImageView
+                android:id="@+id/jejuimg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/jeju01"
+                android:adjustViewBounds="true"/>
+
+            <ImageView
+                android:id="@+id/mapborder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/mapborder"
+                android:adjustViewBounds="true"/>
+
+            <ImageView
+                android:id="@+id/suchiimg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/pm10"
+                android:adjustViewBounds="true"/>
+
+
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:layout_gravity="bottom|end"
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_margin="2dp">
+
+                    <Button
+                        android:id="@+id/pm10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button2"
+                        android:onClick="pm10"
+                        android:textColor="#fff"
+                        android:text="미세먼지"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/pm25"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button1"
+                        android:onClick="pm25"
+                        android:textColor="#fff"
+                        android:text="초미세먼지"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+            </FrameLayout>
+
+
+
+
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>

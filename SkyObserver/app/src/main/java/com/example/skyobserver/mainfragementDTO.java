@@ -2,37 +2,30 @@ package com.example.skyobserver;
 
 import java.io.Serializable;
 
-public class mainfragementDTO implements Serializable{
+public class MainfragementDTO implements Serializable{
 
-    private String  itemCode;
-    private String  seoul ;
-    private String  busan;
-    private String  daegu;
-    private String  incheon;
-    private String  gwangju;
-    private String  daejeon ;
-    private String  ulsan;
-    private String gyeonggi ;
-    private String  gangwon ;
-    private String  chungbuk;
-    private String  chungnam;
-    private String  jeonbuk;
-    private String  jeonnam;
-    private String  gyeongbuk ;
-    private String  gyeongnam;
-    private String jeju ;
-    private String sejong ;
+    private String  datatime    ;
+    private String  seoul       ;
+    private String  busan       ;
+    private String  daegu       ;
+    private String  incheon     ;
+    private String  gwangju     ;
+    private String  daejeon     ;
+    private String  ulsan       ;
+    private String  gyeonggi     ;
+    private String  gangwon     ;
+    private String  chungbuk    ;
+    private String  chungnam    ;
+    private String  jeonbuk     ;
+    private String  jeonnam     ;
+    private String  gyeongbuk   ;
+    private String  gyeongnam   ;
+    private String  jeju         ;
+    private String  sejong          ;
 
 
-    public String getItemCode() {
-        return itemCode;
-    }
 
-    public void setItemCode(String itemCode) {
-        this.itemCode = itemCode;
-    }
-
-    public mainfragementDTO(){
+    public MainfragementDTO(){
 
     }
 
@@ -42,7 +35,7 @@ public class mainfragementDTO implements Serializable{
 
         switch(region){
             case "seoul":
-               return  seoul;
+                return  seoul;
             case   "busan":
                 return  busan;
             case  "daegu":
@@ -223,8 +216,8 @@ public class mainfragementDTO implements Serializable{
 
     @Override
     public String toString() {
-        return "mainfragementDTO{" +
-                "itemCode='" + itemCode + '\'' +
+        return "MainfragementDTO{" +
+                "datatime='" + datatime + '\'' +
                 ", seoul='" + seoul + '\'' +
                 ", busan='" + busan + '\'' +
                 ", daegu='" + daegu + '\'' +
@@ -245,8 +238,8 @@ public class mainfragementDTO implements Serializable{
                 '}';
     }
 
-    public mainfragementDTO(String itemCode, String seoul, String busan, String daegu, String incheon, String gwangju, String daejeon, String ulsan, String gyeonggi, String gangwon, String chungbuk, String chungnam, String jeonbuk, String jeonnam, String gyeongbuk, String gyeongnam, String jeju, String sejong) {
-        this.itemCode=itemCode;
+    public MainfragementDTO(String datatime, String seoul, String busan, String daegu, String incheon, String gwangju, String daejeon, String ulsan, String gyeonggi, String gangwon, String chungbuk, String chungnam, String jeonbuk, String jeonnam, String gyeongbuk, String gyeongnam, String jeju, String sejong) {
+        this.datatime=datatime;
         this.seoul = seoul;
         this.busan = busan;
         this.daegu = daegu;
@@ -264,5 +257,13 @@ public class mainfragementDTO implements Serializable{
         this.gyeongnam = gyeongnam;
         this.jeju = jeju;
         this.sejong = sejong;
+    }
+
+    public String getDatatime() {
+        return datatime;
+    }
+
+    public void setDatatime(String datatime) {
+        this.datatime = datatime;
     }
 }

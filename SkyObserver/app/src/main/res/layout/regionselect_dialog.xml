@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dialoglayout"
+    android:fillViewport="true"
+    android:overScrollMode="always"
+    android:padding="20dp"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/redionsearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12pt"
+        android:hint="읍/면/동/리 를 입력해주세요"
+        android:inputType="text"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/dialRepllist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="#cccccccc"
+            android:dividerHeight="1dp"
+            android:scrollX="@dimen/activity_horizontal_margin"
+
+           />
+
+    </LinearLayout>
+
+
+</LinearLayout>
